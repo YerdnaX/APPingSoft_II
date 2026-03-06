@@ -18,7 +18,24 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="10,0"/>
             <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,0,0,18"/>
+        </Style>
+        <Style x:Key="FormCombo" TargetType="ComboBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Margin" Value="0,0,0,18"/>
+        </Style>
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#3D4A6B"/>
+            <Setter Property="Margin" Value="0,10,0,10"/>
         </Style>
         <Style x:Key="ActionBtn" TargetType="Button">
             <Setter Property="Height" Value="42"/>
@@ -58,7 +75,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-                    <Image Source="/Imagenes/logo.png" Width="150" Height="150" 
+                    <Image Source="/Imagenes/logo.png" Width="150" Height="150"
                            VerticalAlignment="Center" Margin="0,0,8,0"
                            RenderOptions.BitmapScalingMode="HighQuality"/>
                     <TextBlock Text="Evaluacion de Curso" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
@@ -66,15 +83,15 @@
                 <Rectangle Grid.Column="1" Width="1" Fill="#AAAACC" Margin="0,10"/>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
                     <TextBlock Text="Home" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                            MouseLeftButtonDown="IrHome"/>
+                               MouseLeftButtonDown="IrHome"/>
                     <TextBlock Text="Gestion de programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                            MouseLeftButtonDown="IrGestionProgramas"/>
+                               MouseLeftButtonDown="IrGestionProgramas"/>
                     <TextBlock Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                            MouseLeftButtonDown="IrGestionEvaluaciones"/>
+                               MouseLeftButtonDown="IrGestionEvaluaciones"/>
                     <TextBlock Text="Registrar Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                            MouseLeftButtonDown="IrRegistrarResultados"/>
+                               MouseLeftButtonDown="IrRegistrarResultados"/>
                     <TextBlock Text="Reportes y Metricas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                            MouseLeftButtonDown="IrReportes"/>
+                               MouseLeftButtonDown="IrReportes"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -87,7 +104,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="Gestion de Evaluaciones" FontSize="28" FontWeight="Light"
-                       Foreground="#888888" HorizontalAlignment="Center" Margin="0,0,0,40"/>
+                       Foreground="#888888" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -95,61 +112,109 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Formulario -->
-                <StackPanel Grid.Column="0" Margin="0,0,60,0">
-                    <TextBlock Text="TIPO DE EVALUACION" Style="{StaticResource FormLabel}"/>
-                    <Border Background="#F0F0F0" Height="40" CornerRadius="4" Margin="0,0,0,18">
-                        <Grid>
-                            <TextBlock Text="Seleccionar" Foreground="#888888" FontSize="13"
-                                       VerticalAlignment="Center" Margin="10,0"/>
-                            <TextBlock Text="⌄" Foreground="#888888" FontSize="16"
-                                       HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                        </Grid>
-                    </Border>
+                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,60,0">
+                    <StackPanel>
 
-                    <TextBlock Text="CRISTERIOS" Style="{StaticResource FormLabel}"/>
-                    <TextBox Style="{StaticResource FormInput}"/>
+      
+                        <TextBlock Text="— EVALUACIÓN" Style="{StaticResource SectionTitle}"/>
 
-                    <TextBlock Text="PONDERADO" Style="{StaticResource FormLabel}"/>
-                    <TextBox Style="{StaticResource FormInput}"/>
+            
+                        <TextBlock Text="CURSO" Style="{StaticResource FormLabel}"/>
+                        <ComboBox x:Name="cmbCurso" Style="{StaticResource FormCombo}"
+                                  DisplayMemberPath="Nombre"
+                                  SelectedValuePath="CursoId"/>
 
-                    <TextBlock Text="ASIGNACION PARTICIPANTES" Style="{StaticResource FormLabel}"/>
-                    <TextBox Style="{StaticResource FormInput}"/>
+       
+                        <TextBlock Text="TÍTULO" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtTitulo" Style="{StaticResource FormInput}"/>
 
-                    <StackPanel Margin="0,20,0,0">
-                        <StackPanel Margin="0,20,0,0">
-                            <StackPanel Orientation="Vertical">
-                                <Button Content="Ingresar" Style="{StaticResource ActionBtn}" Margin="0,0,0,10"/>
-                                <Button Content="Modificar" Style="{StaticResource ActionBtn}" Margin="0,0,0,10"/>
-                                <Button Content="Borrar" Style="{StaticResource ActionBtn}" Margin="0,0,0,10"/>
-                            </StackPanel>
+          
+                        <TextBlock Text="TIPO DE EVALUACIÓN" Style="{StaticResource FormLabel}"/>
+                        <ComboBox x:Name="cmbTipo" Style="{StaticResource FormCombo}">
+                            <ComboBoxItem Content="Diagnóstica"/>
+                            <ComboBoxItem Content="Formativa"/>
+                            <ComboBoxItem Content="Sumativa"/>
+                        </ComboBox>
+
+             
+                        <TextBlock Text="MOMENTO" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtMomento" Style="{StaticResource FormInput}"/>
+
+                        <TextBlock Text="FECHA APERTURA" Style="{StaticResource FormLabel}"/>
+                        <DatePicker x:Name="dpFechaApertura" Height="40" Background="#F0F0F0"
+                                    BorderThickness="0" FontSize="13" Margin="0,0,0,18"/>
+
+                        <TextBlock Text="FECHA CIERRE" Style="{StaticResource FormLabel}"/>
+                        <DatePicker x:Name="dpFechaCierre" Height="40" Background="#F0F0F0"
+                                    BorderThickness="0" FontSize="13" Margin="0,0,0,18"/>
+
+         
+                        <TextBlock Text="PUNTOS MÁXIMOS" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtPuntosMax" Style="{StaticResource FormInput}"/>
+
+                        <TextBlock Text="ESTADO" Style="{StaticResource FormLabel}"/>
+                        <ComboBox x:Name="cmbEstado" Style="{StaticResource FormCombo}">
+                            <ComboBoxItem Content="Activo"/>
+                            <ComboBoxItem Content="Cerrado"/>
+                            <ComboBoxItem Content="Pendiente"/>
+                        </ComboBox>
+
+                        <TextBlock Text="— CRITERIO" Style="{StaticResource SectionTitle}"/>
+
+                        <TextBlock Text="NOMBRE CRITERIO" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtCriterio" Style="{StaticResource FormInput}"/>
+
+                        <TextBlock Text="PONDERACIÓN" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtPonderacion" Style="{StaticResource FormInput}"/>
+
+
+                        <TextBlock Text="PUNTOS MÁX. CRITERIO" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtPuntosMaxCriterio" Style="{StaticResource FormInput}"/>
+
+                        <!-- Botones -->
+                        <StackPanel Orientation="Vertical" Margin="0,10,0,0">
+                            <Button x:Name="btnIngresar" Content="Ingresar" Style="{StaticResource ActionBtn}"
+                                    Margin="0,0,0,10" />
+                            <Button x:Name="btnModificar" Content="Modificar" Style="{StaticResource ActionBtn}"
+                                    Margin="0,0,0,10" />
+                            <Button x:Name="btnBorrar" Content="Borrar" Style="{StaticResource ActionBtn}"
+                                    Margin="0,0,0,10" />
                         </StackPanel>
                     </StackPanel>
-                </StackPanel>
+                </ScrollViewer>
 
                 <!-- Tabla -->
-                <DataGrid Grid.Column="1" AutoGenerateColumns="False" CanUserAddRows="False"
-                          IsReadOnly="True" BorderBrush="#333333" BorderThickness="1"
+                <DataGrid x:Name="dgEvaluaciones" Grid.Column="1" AutoGenerateColumns="False"
+                          CanUserAddRows="False" IsReadOnly="True"
+                          BorderBrush="#333333" BorderThickness="1"
                           GridLinesVisibility="All" Background="White"
-                          RowBackground="White" AlternatingRowBackground="White"
+                          RowBackground="White" AlternatingRowBackground="#F9F9F9"
                           HeadersVisibility="All" RowHeight="45">
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="#8B9DC3"/>
                             <Setter Property="Foreground" Value="White"/>
                             <Setter Property="Height" Value="45"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
                             <Setter Property="BorderBrush" Value="#333333"/>
                             <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                            <Setter Property="Padding" Value="10,0"/>
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="" Width="*"/>
-                        <DataGridTextColumn Header="" Width="*"/>
-                        <DataGridTextColumn Header="" Width="*"/>
+                        <DataGridTextColumn Header="ID" Binding="{Binding EvaluacionId}" Width="60"/>
+                        <DataGridTextColumn Header="Título" Binding="{Binding Titulo}" Width="*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="110"/>
+                        <DataGridTextColumn Header="Momento" Binding="{Binding Momento}" Width="110"/>
+                        <DataGridTextColumn Header="F. Apertura" Binding="{Binding FechaApertura, StringFormat=dd/MM/yyyy}" Width="100"/>
+                        <DataGridTextColumn Header="F. Cierre" Binding="{Binding FechaCierre, StringFormat=dd/MM/yyyy}" Width="100"/>
+                        <DataGridTextColumn Header="Pts. Máx" Binding="{Binding PuntosMax}" Width="80"/>
+                        <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="90"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
         </Grid>
     </Grid>
 </Window>
+
 

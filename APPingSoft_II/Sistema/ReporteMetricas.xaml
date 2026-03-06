@@ -50,72 +50,7 @@
                     <GradientStop Color="White" Offset="1"/>
                 </LinearGradientBrush>
             </Border.Background>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-
-                <!-- Reporte 1 -->
-                <Border Margin="20,0" Width="280" CornerRadius="16"
-                        BorderBrush="#9090AA" BorderThickness="1.5">
-                    <Border.Effect>
-                        <DropShadowEffect Color="Gray" BlurRadius="8" Opacity="0.2"/>
-                    </Border.Effect>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="300"/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0" Background="#D8DCF0" CornerRadius="14,14,0,0">
-                            <TextBlock Text="Reporte 1" FontSize="20" FontWeight="Bold"
-                                       Foreground="#1A1A2E" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border Grid.Row="1" Background="White" CornerRadius="0,0,14,14" Padding="20,30">
-                           
-                        </Border>
-                    </Grid>
-                </Border>
-
-                <!-- Reporte 2 -->
-                <Border Margin="20,0" Width="280" CornerRadius="16"
-                        BorderBrush="#9090AA" BorderThickness="1.5">
-                    <Border.Effect>
-                        <DropShadowEffect Color="Gray" BlurRadius="8" Opacity="0.2"/>
-                    </Border.Effect>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="300"/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0" Background="#8B9DC3" CornerRadius="14,14,0,0">
-                            <TextBlock Text="Reporte 2" FontSize="20" FontWeight="Bold"
-                                       Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border Grid.Row="1" Background="White" CornerRadius="0,0,14,14" Padding="20,30">
-
-                        </Border>
-                    </Grid>
-                </Border>
-
-                <!-- Reporte 3 -->
-                <Border Margin="20,0" Width="280" CornerRadius="16"
-                        BorderBrush="#9090AA" BorderThickness="1.5">
-                    <Border.Effect>
-                        <DropShadowEffect Color="Gray" BlurRadius="8" Opacity="0.2"/>
-                    </Border.Effect>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="300"/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0" Background="#2D3561" CornerRadius="14,14,0,0">
-                            <TextBlock Text="Reporte 3" FontSize="20" FontWeight="Bold"
-                                       Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <Border Grid.Row="1" Background="White" CornerRadius="0,0,14,14" Padding="20,30">
-                           
-                        </Border>
-                    </Grid>
-                </Border>
-
-            </StackPanel>
+           
         </Border>
     </Grid>
 </Window>

@@ -80,12 +80,6 @@
                     </Button.Template>
                 </Button>
 
-                <TextBlock Text="Recordar contraseña" Foreground="#333333" FontSize="13"
-                           TextDecorations="Underline" Margin="0,20,0,8" Cursor="Hand"/>
-                <TextBlock FontSize="13" Foreground="#333333">
-                    <Run Text="¿Todavía no tienes una cuenta? "/>
-                    <Run Text="Regístrate" TextDecorations="Underline" Foreground="#333333"/>
-                </TextBlock>
             </StackPanel>
         </Border>
     </Grid>
