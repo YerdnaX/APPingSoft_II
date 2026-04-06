@@ -1,14 +1,19 @@
 using APPingSoft_II.Logic.Windows;
 using APPingSoft_II.Models;
+using APPingSoft_II.Models.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace APPingSoft_II.Sistema;
 
 public partial class ReporteMetricas : Window
 {
     private readonly ReportesLogic _logic = new();
+
+    private List<MetricaCurso>    _metricasCurso    = new();
+    private List<MetricaPrograma> _metricasPrograma = new();
 
     public ReporteMetricas()
     {
@@ -50,6 +55,7 @@ public partial class ReporteMetricas : Window
         CargarResultadosDetallados(null, null);
         CargarMetricasCurso();
         CargarMetricasPrograma();
+        ActualizarKPIs();
     }
 
     private void CargarResultadosDetallados(int? programaId, int? cursoId)
@@ -80,9 +86,11 @@ public partial class ReporteMetricas : Window
         {
             var (datos, error) = _logic.ObtenerMetricasCurso();
             if (!string.IsNullOrEmpty(error)) return;
+            _metricasCurso = datos;
             dgMetricasCurso.ItemsSource = datos;
+            ActualizarGraficoCursos();
         }
-        catch { /* Las métricas son opcionales, no mostrar error si falla */ }
+        catch { }
     }
 
     private void CargarMetricasPrograma()
@@ -91,9 +99,110 @@ public partial class ReporteMetricas : Window
         {
             var (datos, error) = _logic.ObtenerMetricasPrograma();
             if (!string.IsNullOrEmpty(error)) return;
+            _metricasPrograma = datos;
             dgMetricasPrograma.ItemsSource = datos;
+            ActualizarGraficoPrograma();
         }
-        catch { /* Las métricas son opcionales */ }
+        catch { }
+    }
+
+    // ── KPI ───────────────────────────────────────────────────────────────────
+
+    private void ActualizarKPIs()
+    {
+        try
+        {
+            kpiParticipantes.Text = _logic.ObtenerTotalParticipantes().ToString();
+            kpiEvaluaciones.Text  = _logic.ObtenerTotalEvaluaciones().ToString();
+
+            var promGeneral = _metricasPrograma
+                .Where(m => m.PromedioGeneral.HasValue)
+                .Select(m => m.PromedioGeneral!.Value)
+                .DefaultIfEmpty(0)
+                .Average();
+            kpiPromedio.Text = $"{promGeneral:N1}";
+
+            var pctAprobacion = _metricasCurso
+                .Where(m => m.PorcentajeAprobacion.HasValue)
+                .Select(m => m.PorcentajeAprobacion!.Value)
+                .DefaultIfEmpty(0)
+                .Average();
+            kpiAprobacion.Text = $"{pctAprobacion:N1}%";
+        }
+        catch { /* KPIs son opcionales */ }
+    }
+
+    // ── Gráficos ──────────────────────────────────────────────────────────────
+
+    private static readonly Brush BrushPrimary  = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3D4A6B"));
+    private static readonly Brush BrushSecond   = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8B9DC3"));
+    private static readonly Brush BrushGreen    = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E8449"));
+    private static readonly Brush BrushGray     = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#AAAAAA"));
+
+    private void ActualizarGraficoCursos()
+    {
+        if (!_metricasCurso.Any())
+        {
+            icChartCurso.Visibility     = Visibility.Collapsed;
+            lblSinDatoCurso.Visibility  = Visibility.Visible;
+            return;
+        }
+
+        lblSinDatoCurso.Visibility = Visibility.Collapsed;
+        icChartCurso.Visibility    = Visibility.Visible;
+
+        const double maxBarHeight = 120;
+        var maxVal = (double)(_metricasCurso.Max(m => m.PromedioNota) ?? 1);
+        if (maxVal == 0) maxVal = 1;
+
+        icChartCurso.ItemsSource = _metricasCurso.Select(m =>
+        {
+            var val = (double)(m.PromedioNota ?? 0);
+            return new BarChartItem
+            {
+                Label     = m.Curso.Length > 14 ? m.Curso[..14] + "…" : m.Curso,
+                ValueText = $"{val:N1}",
+                BarHeight = val / maxVal * maxBarHeight,
+                Fill      = val >= maxVal * 0.7 ? BrushGreen
+                          : val >= maxVal * 0.4 ? BrushPrimary
+                          : BrushSecond
+            };
+        }).ToList();
+    }
+
+    private void ActualizarGraficoPrograma()
+    {
+        if (!_metricasPrograma.Any())
+        {
+            icChartPrograma.Visibility    = Visibility.Collapsed;
+            lblSinDatoPrograma.Visibility = Visibility.Visible;
+            return;
+        }
+
+        lblSinDatoPrograma.Visibility = Visibility.Collapsed;
+        icChartPrograma.Visibility    = Visibility.Visible;
+
+        const double maxBarHeight = 120;
+        var maxVal = (double)(_metricasPrograma.Max(m => m.PromedioGeneral) ?? 1);
+        if (maxVal == 0) maxVal = 1;
+
+        icChartPrograma.ItemsSource = _metricasPrograma.Select(m =>
+        {
+            var val = (double)(m.PromedioGeneral ?? 0);
+            Brush fill = m.Estado switch
+            {
+                "Activo"    => BrushGreen,
+                "Finalizado"=> BrushSecond,
+                _           => BrushGray
+            };
+            return new BarChartItem
+            {
+                Label     = m.Programa.Length > 16 ? m.Programa[..16] + "…" : m.Programa,
+                ValueText = $"{val:N1}",
+                BarHeight = val / maxVal * maxBarHeight,
+                Fill      = fill
+            };
+        }).ToList();
     }
 
     // ── Filtros ───────────────────────────────────────────────────────────────
@@ -101,23 +210,23 @@ public partial class ReporteMetricas : Window
     private void BtnFiltrar_Click(object sender, RoutedEventArgs e)
     {
         int? programaId = (cmbFiltroPrograma.SelectedItem as Programa)?.ProgramaId;
-        int? cursoId = (cmbFiltroCurso.SelectedItem as Curso)?.CursoId;
+        int? cursoId    = (cmbFiltroCurso.SelectedItem    as Curso)?.CursoId;
         CargarResultadosDetallados(programaId, cursoId);
     }
 
     private void BtnLimpiarFiltros_Click(object sender, RoutedEventArgs e)
     {
         cmbFiltroPrograma.SelectedIndex = 0;
-        cmbFiltroCurso.SelectedIndex = 0;
+        cmbFiltroCurso.SelectedIndex    = 0;
         CargarTodosLosReportes();
     }
 
     // ── Navegación ────────────────────────────────────────────────────────────
 
-    private void IrHome(object sender, MouseButtonEventArgs e) { new Home().Show(); this.Close(); }
-    private void IrGestionProgramas(object sender, MouseButtonEventArgs e) { new GestionProgramas().Show(); this.Close(); }
-    private void IrGestionEvaluaciones(object sender, MouseButtonEventArgs e) { new GestionEvaluaciones().Show(); this.Close(); }
-    private void IrRegistrarResultados(object sender, MouseButtonEventArgs e) { new RegistroResultados().Show(); this.Close(); }
-    private void IrReportes(object sender, MouseButtonEventArgs e) { new ReporteMetricas().Show(); this.Close(); }
-    private void IrParticipantes(object sender, MouseButtonEventArgs e) { new GestionParticipantes().Show(); this.Close(); }
+    private void IrHome(object sender, MouseButtonEventArgs e)               { new Home().Show(); this.Close(); }
+    private void IrGestionProgramas(object sender, MouseButtonEventArgs e)   { new GestionProgramas().Show(); this.Close(); }
+    private void IrGestionEvaluaciones(object sender, MouseButtonEventArgs e){ new GestionEvaluaciones().Show(); this.Close(); }
+    private void IrRegistrarResultados(object sender, MouseButtonEventArgs e){ new RegistroResultados().Show(); this.Close(); }
+    private void IrReportes(object sender, MouseButtonEventArgs e)           { new ReporteMetricas().Show(); this.Close(); }
+    private void IrParticipantes(object sender, MouseButtonEventArgs e)      { new GestionParticipantes().Show(); this.Close(); }
 }

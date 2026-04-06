@@ -60,4 +60,16 @@ public class ReportesLogic
             return (new(), ex.Message);
         }
     }
+
+    public int ObtenerTotalParticipantes()
+    {
+        _sistema.RecargarParticipantes();
+        return _sistema.Participantes.Count;
+    }
+
+    public int ObtenerTotalEvaluaciones()
+    {
+        _sistema.RecargarEvaluaciones();
+        return _sistema.Evaluaciones.Count;
+    }
 }

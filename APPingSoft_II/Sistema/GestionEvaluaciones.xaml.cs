@@ -11,6 +11,7 @@ public partial class GestionEvaluaciones : Window
     private readonly GestionEvaluacionesLogic _logic = new();
     private int _evaluacionSeleccionadaId = 0;
     private int _criterioSeleccionadoId = 0;
+    private List<Evaluacion> _todasEvaluaciones = new();
 
     public GestionEvaluaciones()
     {
@@ -44,13 +45,56 @@ public partial class GestionEvaluaciones : Window
     {
         try
         {
-            dgEvaluaciones.ItemsSource = _logic.ObtenerEvaluaciones();
+            _todasEvaluaciones = _logic.ObtenerEvaluaciones();
+            dgEvaluaciones.ItemsSource = _todasEvaluaciones;
+            txtBuscar.Clear();
         }
         catch (Exception ex)
         {
             MessageBox.Show($"Error al cargar evaluaciones:\n{ex.Message}", "Error",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
+    }
+
+    // ── Búsqueda ──────────────────────────────────────────────────────────────
+
+    private void BtnBuscar_Click(object sender, RoutedEventArgs e) => EjecutarBusqueda();
+
+    private void BtnVerTodos_Click(object sender, RoutedEventArgs e)
+    {
+        txtBuscar.Clear();
+        dgEvaluaciones.ItemsSource = _todasEvaluaciones;
+    }
+
+    private void TxtBuscar_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter) EjecutarBusqueda();
+        if (e.Key == Key.Escape) { txtBuscar.Clear(); dgEvaluaciones.ItemsSource = _todasEvaluaciones; }
+    }
+
+    private void EjecutarBusqueda()
+    {
+        var termino = txtBuscar.Text.Trim().ToLower();
+        if (string.IsNullOrEmpty(termino))
+        {
+            dgEvaluaciones.ItemsSource = _todasEvaluaciones;
+            return;
+        }
+
+        var filtradas = _todasEvaluaciones
+            .Where(e =>
+                e.Titulo.ToLower().Contains(termino) ||
+                e.Tipo.ToLower().Contains(termino) ||
+                e.Estado.ToLower().Contains(termino) ||
+                e.Momento.ToLower().Contains(termino) ||
+                (e.Curso?.Nombre.ToLower().Contains(termino) ?? false))
+            .ToList();
+
+        dgEvaluaciones.ItemsSource = filtradas;
+
+        if (filtradas.Count == 0)
+            MessageBox.Show("No se encontraron evaluaciones que coincidan con la búsqueda.", "Sin resultados",
+                MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     // ── Botones CRUD ──────────────────────────────────────────────────────────

@@ -10,6 +10,7 @@ public partial class GestionProgramas : Window
 {
     private readonly GestionProgramasLogic _logic = new();
     private int _programaSeleccionadoId = 0;
+    private List<Programa> _todosProgramas = new();
 
     public GestionProgramas()
     {
@@ -44,13 +45,55 @@ public partial class GestionProgramas : Window
     {
         try
         {
-            dgProgramas.ItemsSource = _logic.ObtenerProgramas();
+            _todosProgramas = _logic.ObtenerProgramas();
+            dgProgramas.ItemsSource = _todosProgramas;
+            txtBuscar.Clear();
         }
         catch (Exception ex)
         {
             MessageBox.Show($"Error al cargar programas:\n{ex.Message}", "Error",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
+    }
+
+    // ── Búsqueda ──────────────────────────────────────────────────────────────
+
+    private void BtnBuscar_Click(object sender, RoutedEventArgs e) => EjecutarBusqueda();
+
+    private void BtnVerTodos_Click(object sender, RoutedEventArgs e)
+    {
+        txtBuscar.Clear();
+        dgProgramas.ItemsSource = _todosProgramas;
+    }
+
+    private void TxtBuscar_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter) EjecutarBusqueda();
+        if (e.Key == Key.Escape) { txtBuscar.Clear(); dgProgramas.ItemsSource = _todosProgramas; }
+    }
+
+    private void EjecutarBusqueda()
+    {
+        var termino = txtBuscar.Text.Trim().ToLower();
+        if (string.IsNullOrEmpty(termino))
+        {
+            dgProgramas.ItemsSource = _todosProgramas;
+            return;
+        }
+
+        var filtrados = _todosProgramas
+            .Where(p =>
+                p.Nombre.ToLower().Contains(termino) ||
+                p.Estado.ToLower().Contains(termino) ||
+                (p.Instructor?.NombreCompleto.ToLower().Contains(termino) ?? false) ||
+                (p.Curso?.Nombre.ToLower().Contains(termino) ?? false))
+            .ToList();
+
+        dgProgramas.ItemsSource = filtrados;
+
+        if (filtrados.Count == 0)
+            MessageBox.Show("No se encontraron programas que coincidan con la búsqueda.", "Sin resultados",
+                MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     // ── Botones CRUD ──────────────────────────────────────────────────────────
@@ -112,14 +155,9 @@ public partial class GestionProgramas : Window
         dpFechaInicio.SelectedDate = p.FechaInicio;
         dpFechaFin.SelectedDate = p.FechaFin;
 
-        // Seleccionar estado en combo
         foreach (ComboBoxItem item in cmbEstado.Items)
         {
-            if (item.Content?.ToString() == p.Estado)
-            {
-                cmbEstado.SelectedItem = item;
-                break;
-            }
+            if (item.Content?.ToString() == p.Estado) { cmbEstado.SelectedItem = item; break; }
         }
 
         cmbInstructor.SelectedValue = p.InstructorId;
@@ -134,8 +172,7 @@ public partial class GestionProgramas : Window
         {
             MessageBox.Show("El nombre del programa es obligatorio.", "Validación",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
-            txtNombre.Focus();
-            return null;
+            txtNombre.Focus(); return null;
         }
         if (dpFechaInicio.SelectedDate == null)
         {
@@ -149,9 +186,6 @@ public partial class GestionProgramas : Window
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return null;
         }
-
-        var estado = (cmbEstado.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Activo";
-
         if (cmbInstructor.SelectedValue == null)
         {
             MessageBox.Show("Seleccione un instructor.", "Validación",
@@ -165,6 +199,7 @@ public partial class GestionProgramas : Window
             return null;
         }
 
+        var estado = (cmbEstado.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Activo";
         return new Programa
         {
             Nombre = txtNombre.Text.Trim(),
