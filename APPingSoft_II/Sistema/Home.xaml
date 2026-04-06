@@ -29,9 +29,14 @@
                 <!-- Logo -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,15,15,0" Grid.RowSpan="2">
                     <Border Width="30" Height="30" Margin="0,0,8,0">
-                        <Image Source="/Imagenes/logo.png" Width="28" Height="28"
-                           VerticalAlignment="Center" Margin="0,0,8,0"
-                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                        <Rectangle>
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/Imagenes/logo.png"
+                                            Stretch="UniformToFill"
+                                            Viewbox="0.23,0.23,0.54,0.54"
+                                            ViewboxUnits="RelativeToBoundingBox"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
                     </Border>
                     <TextBlock Text="Evaluacion de Curso" FontSize="13" FontWeight="SemiBold"
                                Foreground="White" VerticalAlignment="Center"/>
@@ -47,6 +52,9 @@
                     <TextBlock Text="Gestion de programas" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionProgramas"/>
+                    <TextBlock Text="Gestionar participantes" FontSize="12" Foreground="White"
+                               Margin="10,0" Cursor="Hand"
+                               MouseLeftButtonDown="IrParticipantes"/>
                     <TextBlock Text="Gestion de Evaluaciones" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionEvaluaciones"/>
@@ -58,9 +66,10 @@
                 </StackPanel>
 
                 <!-- Cerrar Sesión -->
-                <Border Grid.Column="4" Background="#5C6BC0" CornerRadius="20" Padding="15,5" Cursor="Hand"
+                <Border Grid.Column="4" Background="#5C6BC0" CornerRadius="6" Width="140" Height="42" Cursor="Hand"
                         Grid.RowSpan="2" MouseLeftButtonDown="BtnCerrarSesion_Click">
-                    <TextBlock Text="Cerrar Sesión" Foreground="White" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="Cerrar Sesión" Foreground="White" FontSize="13" FontWeight="SemiBold"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
             </Grid>
         </Border>

@@ -6,49 +6,60 @@ using System.Windows.Input;
 
 namespace APPingSoft_II.Sistema;
 
-public partial class GestionProgramas : Window
+public partial class GestionParticipantes : Window
 {
-    private readonly GestionProgramasLogic _logic = new();
-    private int _programaSeleccionadoId = 0;
+    private readonly GestionParticipantesLogic _logic = new();
+    private int _participanteSeleccionadoId = 0;
 
-    public GestionProgramas()
+    public GestionParticipantes()
     {
         InitializeComponent();
-        Loaded += GestionProgramas_Loaded;
+        Loaded += GestionParticipantes_Loaded;
     }
 
-    private void GestionProgramas_Loaded(object sender, RoutedEventArgs e)
+    private void GestionParticipantes_Loaded(object sender, RoutedEventArgs e)
     {
-        CargarCombos();
         CargarTabla();
         LimpiarFormulario();
     }
 
     // ── Carga de datos ────────────────────────────────────────────────────────
 
-    private void CargarCombos()
-    {
-        try
-        {
-            cmbInstructor.ItemsSource = _logic.ObtenerInstructores();
-            cmbCurso.ItemsSource = _logic.ObtenerCursos();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error al cargar datos auxiliares:\n{ex.Message}", "Error",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-        }
-    }
-
     private void CargarTabla()
     {
         try
         {
-            dgProgramas.ItemsSource = _logic.ObtenerProgramas();
+            dgParticipantes.ItemsSource = _logic.ObtenerTodos();
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Error al cargar programas:\n{ex.Message}", "Error",
+            MessageBox.Show($"Error al cargar participantes:\n{ex.Message}", "Error",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    // ── Búsqueda ──────────────────────────────────────────────────────────────
+
+    private void BtnBuscar_Click(object sender, RoutedEventArgs e) => EjecutarBusqueda();
+
+    private void TxtBuscar_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter) EjecutarBusqueda();
+        if (e.Key == Key.Escape) { txtBuscar.Clear(); CargarTabla(); }
+    }
+
+    private void EjecutarBusqueda()
+    {
+        try
+        {
+            var termino = txtBuscar.Text.Trim();
+            dgParticipantes.ItemsSource = string.IsNullOrEmpty(termino)
+                ? _logic.ObtenerTodos()
+                : _logic.Buscar(termino);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error al buscar:\n{ex.Message}", "Error",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
@@ -57,62 +68,69 @@ public partial class GestionProgramas : Window
 
     private void BtnIngresar_Click(object sender, RoutedEventArgs e)
     {
-        var programa = LeerFormulario();
-        if (programa == null) return;
+        var participante = LeerFormulario();
+        if (participante == null) return;
 
-        var (ok, mensaje) = _logic.Insertar(programa);
+        var (ok, mensaje) = _logic.Insertar(participante);
         MostrarMensaje(ok, mensaje);
         if (ok) { CargarTabla(); LimpiarFormulario(); }
     }
 
     private void BtnModificar_Click(object sender, RoutedEventArgs e)
     {
-        if (_programaSeleccionadoId <= 0)
+        if (_participanteSeleccionadoId <= 0)
         {
-            MessageBox.Show("Seleccione un programa de la tabla para modificar.", "Aviso",
+            MessageBox.Show("Seleccione un participante de la tabla para modificar.", "Aviso",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
-        var programa = LeerFormulario();
-        if (programa == null) return;
-        programa.ProgramaId = _programaSeleccionadoId;
+        var participante = LeerFormulario();
+        if (participante == null) return;
+        participante.ParticipanteId = _participanteSeleccionadoId;
 
-        var (ok, mensaje) = _logic.Actualizar(programa);
+        var (ok, mensaje) = _logic.Actualizar(participante);
         MostrarMensaje(ok, mensaje);
         if (ok) { CargarTabla(); LimpiarFormulario(); }
     }
 
     private void BtnBorrar_Click(object sender, RoutedEventArgs e)
     {
-        if (_programaSeleccionadoId <= 0)
+        if (_participanteSeleccionadoId <= 0)
         {
-            MessageBox.Show("Seleccione un programa de la tabla para eliminar.", "Aviso",
+            MessageBox.Show("Seleccione un participante de la tabla para desactivar.", "Aviso",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
-        var result = MessageBox.Show("¿Desea desactivar el programa seleccionado?", "Confirmar",
+        bool tieneInscripciones = _logic.TieneInscripciones(_participanteSeleccionadoId);
+        string aviso = tieneInscripciones
+            ? "Este participante tiene inscripciones registradas.\n" +
+              "Se desactivará pero su historial se conservará.\n\n¿Desea continuar?"
+            : "¿Desea desactivar el participante seleccionado?";
+
+        var result = MessageBox.Show(aviso, "Confirmar desactivación",
             MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (result != MessageBoxResult.Yes) return;
 
-        var (ok, mensaje) = _logic.Eliminar(_programaSeleccionadoId);
+        var (ok, mensaje) = _logic.Desactivar(_participanteSeleccionadoId);
         MostrarMensaje(ok, mensaje);
         if (ok) { CargarTabla(); LimpiarFormulario(); }
     }
 
+    private void BtnLimpiar_Click(object sender, RoutedEventArgs e) => LimpiarFormulario();
+
     // ── Selección en tabla ────────────────────────────────────────────────────
 
-    private void DgProgramas_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void DgParticipantes_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (dgProgramas.SelectedItem is not Programa p) return;
+        if (dgParticipantes.SelectedItem is not Participante p) return;
 
-        _programaSeleccionadoId = p.ProgramaId;
-        txtNombre.Text = p.Nombre;
-        dpFechaInicio.SelectedDate = p.FechaInicio;
-        dpFechaFin.SelectedDate = p.FechaFin;
+        _participanteSeleccionadoId = p.ParticipanteId;
+        txtNombre.Text = p.NombreCompleto;
+        txtCorreo.Text = p.CorreoElectronico;
+        txtTelefono.Text = p.Telefono ?? string.Empty;
 
-        // Seleccionar estado en combo
         foreach (ComboBoxItem item in cmbEstado.Items)
         {
             if (item.Content?.ToString() == p.Estado)
@@ -121,71 +139,48 @@ public partial class GestionProgramas : Window
                 break;
             }
         }
-
-        cmbInstructor.SelectedValue = p.InstructorId;
-        cmbCurso.SelectedValue = p.CursoId;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private Programa? LeerFormulario()
+    private Participante? LeerFormulario()
     {
         if (string.IsNullOrWhiteSpace(txtNombre.Text))
         {
-            MessageBox.Show("El nombre del programa es obligatorio.", "Validación",
+            MessageBox.Show("El nombre completo es obligatorio.", "Validación",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             txtNombre.Focus();
             return null;
         }
-        if (dpFechaInicio.SelectedDate == null)
+        if (string.IsNullOrWhiteSpace(txtCorreo.Text))
         {
-            MessageBox.Show("Seleccione la fecha de inicio.", "Validación",
+            MessageBox.Show("El correo electrónico es obligatorio.", "Validación",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
-            return null;
-        }
-        if (dpFechaFin.SelectedDate == null)
-        {
-            MessageBox.Show("Seleccione la fecha de fin.", "Validación",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
+            txtCorreo.Focus();
             return null;
         }
 
         var estado = (cmbEstado.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Activo";
+        var telefono = string.IsNullOrWhiteSpace(txtTelefono.Text) ? null : txtTelefono.Text.Trim();
 
-        if (cmbInstructor.SelectedValue == null)
+        return new Participante
         {
-            MessageBox.Show("Seleccione un instructor.", "Validación",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return null;
-        }
-        if (cmbCurso.SelectedValue == null)
-        {
-            MessageBox.Show("Seleccione un curso.", "Validación",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return null;
-        }
-
-        return new Programa
-        {
-            Nombre = txtNombre.Text.Trim(),
-            FechaInicio = dpFechaInicio.SelectedDate!.Value,
-            FechaFin = dpFechaFin.SelectedDate!.Value,
-            Estado = estado,
-            InstructorId = (int)cmbInstructor.SelectedValue,
-            CursoId = (int)cmbCurso.SelectedValue
+            NombreCompleto = txtNombre.Text.Trim(),
+            CorreoElectronico = txtCorreo.Text.Trim(),
+            Telefono = telefono,
+            Estado = estado
         };
     }
 
     private void LimpiarFormulario()
     {
         txtNombre.Clear();
-        dpFechaInicio.SelectedDate = null;
-        dpFechaFin.SelectedDate = null;
+        txtCorreo.Clear();
+        txtTelefono.Clear();
         cmbEstado.SelectedIndex = 0;
-        cmbInstructor.SelectedIndex = -1;
-        cmbCurso.SelectedIndex = -1;
-        dgProgramas.SelectedItem = null;
-        _programaSeleccionadoId = 0;
+        dgParticipantes.SelectedItem = null;
+        _participanteSeleccionadoId = 0;
+        txtNombre.Focus();
     }
 
     private static void MostrarMensaje(bool ok, string mensaje)

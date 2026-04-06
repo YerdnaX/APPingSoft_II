@@ -72,12 +72,12 @@
                            Margin="0,0,0,10" Visibility="Collapsed"/>
 
                 <!-- Botón -->
-                <Button Content="Iniciar sesión" Height="52" FontSize="16" FontWeight="Bold"
+                <Button Content="Iniciar sesión" Height="42" FontSize="13" FontWeight="SemiBold"
                         Background="#5C6BC0" Foreground="White" BorderThickness="0"
                         Cursor="Hand" Click="BtnIniciarSesion_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="#5C6BC0" CornerRadius="25">
+                            <Border Background="#5C6BC0" CornerRadius="6">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>

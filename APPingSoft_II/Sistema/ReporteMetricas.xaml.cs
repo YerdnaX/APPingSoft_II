@@ -119,4 +119,5 @@ public partial class ReporteMetricas : Window
     private void IrGestionEvaluaciones(object sender, MouseButtonEventArgs e) { new GestionEvaluaciones().Show(); this.Close(); }
     private void IrRegistrarResultados(object sender, MouseButtonEventArgs e) { new RegistroResultados().Show(); this.Close(); }
     private void IrReportes(object sender, MouseButtonEventArgs e) { new ReporteMetricas().Show(); this.Close(); }
+    private void IrParticipantes(object sender, MouseButtonEventArgs e) { new GestionParticipantes().Show(); this.Close(); }
 }
