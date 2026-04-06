@@ -174,17 +174,18 @@
                         <!-- Botones -->
                         <StackPanel Orientation="Vertical" Margin="0,10,0,0">
                             <Button x:Name="btnIngresar" Content="Ingresar" Style="{StaticResource ActionBtn}"
-                                    Margin="0,0,0,10" />
+                                    Margin="0,0,0,10" Click="BtnIngresar_Click"/>
                             <Button x:Name="btnModificar" Content="Modificar" Style="{StaticResource ActionBtn}"
-                                    Margin="0,0,0,10" />
+                                    Margin="0,0,0,10" Click="BtnModificar_Click"/>
                             <Button x:Name="btnBorrar" Content="Borrar" Style="{StaticResource ActionBtn}"
-                                    Margin="0,0,0,10" />
+                                    Margin="0,0,0,10" Click="BtnBorrar_Click"/>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
 
                 <!-- Tabla -->
                 <DataGrid x:Name="dgEvaluaciones" Grid.Column="1" AutoGenerateColumns="False"
+                          SelectionChanged="DgEvaluaciones_SelectionChanged"
                           CanUserAddRows="False" IsReadOnly="True"
                           BorderBrush="#333333" BorderThickness="1"
                           GridLinesVisibility="All" Background="White"

@@ -1,4 +1,4 @@
-﻿<Window x:Class="APPingSoft_II.Sistema.Login"
+<Window x:Class="APPingSoft_II.Sistema.Login"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Login" Height="600" Width="1000"
@@ -20,13 +20,12 @@
                 </LinearGradientBrush>
             </Border.Background>
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30,30,0,0">
-                <!-- Logo -->
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,60">
                     <Border Width="40" Height="40" Margin="0,0,10,0">
                         <Grid>
-                            <Rectangle Fill="#FF0024E9" Width="18" Height="18" 
+                            <Rectangle Fill="#FF0024E9" Width="18" Height="18"
                                        HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                            <Rectangle Fill="#2D3561" Width="18" Height="18" 
+                            <Rectangle Fill="#2D3561" Width="18" Height="18"
                                        HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
                         </Grid>
                     </Border>
@@ -36,9 +35,6 @@
                     </StackPanel>
                 </StackPanel>
                 <Image Source="/Imagenes/evaluacion.png" Width="320" Height="320" Stretch="Uniform" Margin="56,0,57,0"/>
-
-
-                <!-- Ilustración placeholder -->
             </StackPanel>
         </Border>
 
@@ -50,27 +46,35 @@
 
                 <!-- Correo -->
                 <Border BorderBrush="#C0C0C0" BorderThickness="1.5" CornerRadius="6" Margin="0,0,0,16">
-                    <TextBox Text="Correo electrónico" Foreground="#AAAAAA"
+                    <TextBox x:Name="txtCorreo" FontSize="14" Padding="15,12" Height="50"
                              Background="Transparent" BorderThickness="0"
-                             FontSize="14" Padding="15,12" Height="50"/>
+                             Foreground="#333333" VerticalContentAlignment="Center"
+                             KeyDown="TxtCorreo_KeyDown"/>
                 </Border>
 
                 <!-- Contraseña -->
-                <Border BorderBrush="#C0C0C0" BorderThickness="1.5" CornerRadius="6" Margin="0,0,0,25">
+                <Border BorderBrush="#C0C0C0" BorderThickness="1.5" CornerRadius="6" Margin="0,0,0,10">
                     <Grid>
-                        <PasswordBox Foreground="#AAAAAA" Background="Transparent"
-                                     BorderThickness="0" FontSize="14" Padding="15,12" Height="50"/>
-                        <TextBlock Text="Contraseña" Foreground="#AAAAAA" FontSize="14"
-                                   VerticalAlignment="Center" Margin="15,0,0,0" IsHitTestVisible="False"/>
-                        <TextBlock Text="👁" FontSize="16" HorizontalAlignment="Right"
-                                   VerticalAlignment="Center" Margin="0,0,15,0"/>
+                        <PasswordBox x:Name="pwdContrasena" Foreground="#333333" Background="Transparent"
+                                     BorderThickness="0" FontSize="14" Padding="15,12" Height="50"
+                                     KeyDown="PwdContrasena_KeyDown"/>
+                        <TextBox x:Name="txtContrasenaVisible" Foreground="#333333" Background="Transparent"
+                                 BorderThickness="0" FontSize="14" Padding="15,12" Height="50"
+                                 Visibility="Collapsed" VerticalContentAlignment="Center"/>
+                        <TextBlock x:Name="lblToggleIcon" Text="👁" FontSize="16" HorizontalAlignment="Right"
+                                   VerticalAlignment="Center" Margin="0,0,15,0" Cursor="Hand"
+                                   MouseLeftButtonDown="BtnTogglePassword_MouseLeftButtonDown"/>
                     </Grid>
                 </Border>
+
+                <!-- Mensaje de error -->
+                <TextBlock x:Name="lblError" Foreground="Red" FontSize="12" TextWrapping="Wrap"
+                           Margin="0,0,0,10" Visibility="Collapsed"/>
 
                 <!-- Botón -->
                 <Button Content="Iniciar sesión" Height="52" FontSize="16" FontWeight="Bold"
                         Background="#5C6BC0" Foreground="White" BorderThickness="0"
-                        Cursor="Hand">
+                        Cursor="Hand" Click="BtnIniciarSesion_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="#5C6BC0" CornerRadius="25">

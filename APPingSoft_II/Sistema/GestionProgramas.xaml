@@ -140,16 +140,17 @@
                     <!-- Botones -->
                     <StackPanel Orientation="Vertical" Margin="0,20,0,0">
                         <Button x:Name="btnIngresar" Content="Ingresar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10"/>
+                                Margin="0,0,0,10" Click="BtnIngresar_Click"/>
                         <Button x:Name="btnModificar" Content="Modificar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10" />
+                                Margin="0,0,0,10" Click="BtnModificar_Click"/>
                         <Button x:Name="btnBorrar" Content="Borrar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10" />
+                                Margin="0,0,0,10" Click="BtnBorrar_Click"/>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Tabla -->
                 <DataGrid x:Name="dgProgramas" Grid.Column="1" AutoGenerateColumns="False"
+                          SelectionChanged="DgProgramas_SelectionChanged"
                           CanUserAddRows="False" IsReadOnly="True"
                           BorderBrush="#333333" BorderThickness="1"
                           GridLinesVisibility="All" Background="White"
