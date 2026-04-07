@@ -19,11 +19,11 @@ public class ReporteService
         }
     }
 
-    public List<MetricaCurso> ObtenerMetricasCurso()
+    public List<MetricaCurso> ObtenerMetricasCurso(int? cursoId = null)
     {
         try
         {
-            return _repo.ObtenerMetricasCurso();
+            return _repo.ObtenerMetricasCurso(cursoId);
         }
         catch (Exception ex)
         {
@@ -31,11 +31,11 @@ public class ReporteService
         }
     }
 
-    public List<MetricaPrograma> ObtenerMetricasPrograma()
+    public List<MetricaPrograma> ObtenerMetricasPrograma(int? programaId = null)
     {
         try
         {
-            return _repo.ObtenerMetricasPrograma();
+            return _repo.ObtenerMetricasPrograma(programaId);
         }
         catch (Exception ex)
         {

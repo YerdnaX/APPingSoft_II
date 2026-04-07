@@ -67,11 +67,11 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
                     <TextBlock Text="Home" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrHome"/>
-                    <TextBlock Text="Gestion de programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navGestionProgramas" Text="Gestion de programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionProgramas"/>
-                    <TextBlock Text="Gestionar participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navParticipantes" Text="Gestionar participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrParticipantes"/>
-                    <TextBlock Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navGestionEvaluaciones" Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionEvaluaciones"/>
                     <TextBlock Text="Registrar Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrRegistrarResultados"/>
@@ -102,19 +102,30 @@
                         <TextBlock Text="Filtrar por Programa:" VerticalAlignment="Center"
                                    FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="0,0,8,0"/>
                         <ComboBox x:Name="cmbFiltroPrograma" Style="{StaticResource FormCombo}" Width="220"
-                                  DisplayMemberPath="Nombre" SelectedValuePath="ProgramaId"/>
+                                  DisplayMemberPath="Nombre" SelectedValuePath="ProgramaId"
+                                  SelectionChanged="CmbFiltroPrograma_SelectionChanged"/>
                         <TextBlock Text="Filtrar por Curso:" VerticalAlignment="Center"
                                    FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="0,0,8,0"/>
                         <ComboBox x:Name="cmbFiltroCurso" Style="{StaticResource FormCombo}" Width="220"
-                                  DisplayMemberPath="Nombre" SelectedValuePath="CursoId"/>
+                                  DisplayMemberPath="Nombre" SelectedValuePath="CursoId"
+                                  SelectionChanged="CmbFiltroCurso_SelectionChanged"/>
                         <Button Content="Filtrar" Style="{StaticResource ActionBtn}" Click="BtnFiltrar_Click"/>
                         <Button Content="Limpiar" Style="{StaticResource ActionBtn}"
                                 Background="#888888" Click="BtnLimpiarFiltros_Click"/>
                     </StackPanel>
                 </Border>
 
+                <!-- Etiqueta de filtro activo -->
+                <Border Grid.Row="2" x:Name="pnlFiltroActivo" Background="#EEF2FF" CornerRadius="6"
+                        Padding="12,6" Margin="0,0,0,12" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Mostrando: " FontSize="12" FontWeight="SemiBold" Foreground="#3D4A6B"/>
+                        <TextBlock x:Name="lblFiltroActivo" FontSize="12" Foreground="#3D4A6B"/>
+                    </StackPanel>
+                </Border>
+
                 <!-- KPI Cards -->
-                <Grid Grid.Row="2" Margin="0,0,0,20">
+                <Grid Grid.Row="3" Margin="0,0,0,20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -127,7 +138,7 @@
                         <StackPanel>
                             <TextBlock x:Name="kpiParticipantes" Text="—" FontSize="38" FontWeight="Bold"
                                        Foreground="White" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Participantes" FontSize="12" Foreground="#A8B8D8"
+                            <TextBlock x:Name="lblKpiParticipantes" Text="Participantes" FontSize="12" Foreground="#A8B8D8"
                                        HorizontalAlignment="Center" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Border>
@@ -137,7 +148,7 @@
                         <StackPanel>
                             <TextBlock x:Name="kpiEvaluaciones" Text="—" FontSize="38" FontWeight="Bold"
                                        Foreground="White" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Evaluaciones" FontSize="12" Foreground="#BBCCEE"
+                            <TextBlock x:Name="lblKpiEvaluaciones" Text="Evaluaciones" FontSize="12" Foreground="#BBCCEE"
                                        HorizontalAlignment="Center" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Border>
@@ -163,174 +174,182 @@
                     </Border>
                 </Grid>
 
-                <!-- Gráficos -->
-                <Grid Grid.Row="3" Margin="0,0,0,20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <!-- Gráficos y Tablas -->
+                <Grid Grid.Row="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                    <!-- Gráfico: Promedio por Curso -->
-                    <Border Grid.Column="0" Background="#F8F9FC" CornerRadius="10" Margin="0,0,8,0"
-                            BorderBrush="#E0E0E0" BorderThickness="1" Padding="16,14">
-                        <StackPanel>
-                            <TextBlock Text="Promedio por Curso" FontSize="14" FontWeight="Bold"
-                                       Foreground="#3D4A6B" Margin="0,0,0,12"/>
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="180">
-                                <ItemsControl x:Name="icChartCurso">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Height="180"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Width="68" Margin="6,0" VerticalAlignment="Bottom">
-                                                <TextBlock Text="{Binding ValueText}" FontSize="10" FontWeight="SemiBold"
-                                                           HorizontalAlignment="Center" Foreground="#555" Margin="0,0,0,4"/>
-                                                <Border CornerRadius="3,3,0,0" HorizontalAlignment="Center" Width="44"
-                                                        Height="{Binding BarHeight}"
-                                                        Background="{Binding Fill}"/>
-                                                <TextBlock Text="{Binding Label}" FontSize="9" TextWrapping="Wrap"
-                                                           HorizontalAlignment="Center" MaxWidth="66"
-                                                           TextAlignment="Center" Foreground="#666" Margin="0,5,0,0"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                            <TextBlock x:Name="lblSinDatoCurso" Text="Sin datos disponibles" FontSize="12"
-                                       Foreground="#AAAAAA" HorizontalAlignment="Center" Margin="0,30,0,0"
-                                       Visibility="Collapsed"/>
-                        </StackPanel>
-                    </Border>
+                    <!-- Gráficos -->
+                    <Grid Grid.Row="0" Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Gráfico: Métricas por Programa -->
-                    <Border Grid.Column="1" Background="#F8F9FC" CornerRadius="10" Margin="8,0,0,0"
-                            BorderBrush="#E0E0E0" BorderThickness="1" Padding="16,14">
-                        <StackPanel>
-                            <TextBlock Text="Promedio por Programa" FontSize="14" FontWeight="Bold"
-                                       Foreground="#3D4A6B" Margin="0,0,0,12"/>
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="180">
-                                <ItemsControl x:Name="icChartPrograma">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Height="180"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Width="80" Margin="6,0" VerticalAlignment="Bottom">
-                                                <TextBlock Text="{Binding ValueText}" FontSize="10" FontWeight="SemiBold"
-                                                           HorizontalAlignment="Center" Foreground="#555" Margin="0,0,0,4"/>
-                                                <Border CornerRadius="3,3,0,0" HorizontalAlignment="Center" Width="52"
-                                                        Height="{Binding BarHeight}"
-                                                        Background="{Binding Fill}"/>
-                                                <TextBlock Text="{Binding Label}" FontSize="9" TextWrapping="Wrap"
-                                                           HorizontalAlignment="Center" MaxWidth="78"
-                                                           TextAlignment="Center" Foreground="#666" Margin="0,5,0,0"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                            <TextBlock x:Name="lblSinDatoPrograma" Text="Sin datos disponibles" FontSize="12"
-                                       Foreground="#AAAAAA" HorizontalAlignment="Center" Margin="0,30,0,0"
-                                       Visibility="Collapsed"/>
-                        </StackPanel>
-                    </Border>
+                        <!-- Gráfico: Promedio por Curso -->
+                        <Border Grid.Column="0" Background="#F8F9FC" CornerRadius="10" Margin="0,0,8,0"
+                                BorderBrush="#E0E0E0" BorderThickness="1" Padding="16,14">
+                            <StackPanel>
+                                <TextBlock Text="Promedio por Curso" FontSize="14" FontWeight="Bold"
+                                           Foreground="#3D4A6B" Margin="0,0,0,12"/>
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="180">
+                                    <ItemsControl x:Name="icChartCurso">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Height="180"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Width="68" Margin="6,0" VerticalAlignment="Bottom">
+                                                    <TextBlock Text="{Binding ValueText}" FontSize="10" FontWeight="SemiBold"
+                                                               HorizontalAlignment="Center" Foreground="#555" Margin="0,0,0,4"/>
+                                                    <Border CornerRadius="3,3,0,0" HorizontalAlignment="Center" Width="44"
+                                                            Height="{Binding BarHeight}"
+                                                            Background="{Binding Fill}"/>
+                                                    <TextBlock Text="{Binding Label}" FontSize="9" TextWrapping="Wrap"
+                                                               HorizontalAlignment="Center" MaxWidth="66"
+                                                               TextAlignment="Center" Foreground="#666" Margin="0,5,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                                <TextBlock x:Name="lblSinDatoCurso" Text="Sin datos disponibles" FontSize="12"
+                                           Foreground="#AAAAAA" HorizontalAlignment="Center" Margin="0,30,0,0"
+                                           Visibility="Collapsed"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Gráfico: Métricas por Programa -->
+                        <Border x:Name="pnlGraficoPrograma" Grid.Column="1" Background="#F8F9FC" CornerRadius="10" Margin="8,0,0,0"
+                                BorderBrush="#E0E0E0" BorderThickness="1" Padding="16,14">
+                            <StackPanel>
+                                <TextBlock Text="Promedio por Programa" FontSize="14" FontWeight="Bold"
+                                           Foreground="#3D4A6B" Margin="0,0,0,12"/>
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="180">
+                                    <ItemsControl x:Name="icChartPrograma">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Height="180"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Width="80" Margin="6,0" VerticalAlignment="Bottom">
+                                                    <TextBlock Text="{Binding ValueText}" FontSize="10" FontWeight="SemiBold"
+                                                               HorizontalAlignment="Center" Foreground="#555" Margin="0,0,0,4"/>
+                                                    <Border CornerRadius="3,3,0,0" HorizontalAlignment="Center" Width="52"
+                                                            Height="{Binding BarHeight}"
+                                                            Background="{Binding Fill}"/>
+                                                    <TextBlock Text="{Binding Label}" FontSize="9" TextWrapping="Wrap"
+                                                               HorizontalAlignment="Center" MaxWidth="78"
+                                                               TextAlignment="Center" Foreground="#666" Margin="0,5,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                                <TextBlock x:Name="lblSinDatoPrograma" Text="Sin datos disponibles" FontSize="12"
+                                           Foreground="#AAAAAA" HorizontalAlignment="Center" Margin="0,30,0,0"
+                                           Visibility="Collapsed"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Tablas detalladas -->
+                    <TabControl Grid.Row="1" Background="White" BorderBrush="#DDDDDD" MinHeight="320">
+
+                        <!-- Tab 1: Resultados detallados -->
+                        <TabItem Header="Resultados Detallados" FontSize="13" FontWeight="SemiBold">
+                            <DataGrid x:Name="dgResultadosDetallados" AutoGenerateColumns="False"
+                                      CanUserAddRows="False" IsReadOnly="True"
+                                      BorderBrush="#CCCCCC" BorderThickness="1"
+                                      GridLinesVisibility="All" Background="White"
+                                      RowBackground="White" AlternatingRowBackground="#F9F9F9"
+                                      HeadersVisibility="All" RowHeight="40" MaxHeight="400">
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="#8B9DC3"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="Height" Value="40"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="Padding" Value="8,0"/>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Participante" Binding="{Binding Participante}" Width="160"/>
+                                    <DataGridTextColumn Header="Programa" Binding="{Binding Programa}" Width="*"/>
+                                    <DataGridTextColumn Header="Curso" Binding="{Binding Curso}" Width="150"/>
+                                    <DataGridTextColumn Header="Evaluación" Binding="{Binding Evaluacion}" Width="*"/>
+                                    <DataGridTextColumn Header="Tipo" Binding="{Binding TipoEvaluacion}" Width="100"/>
+                                    <DataGridTextColumn Header="Pts. Máx" Binding="{Binding PuntosMax}" Width="80"/>
+                                    <DataGridTextColumn Header="Nota Final" Binding="{Binding NotaFinal}" Width="90"/>
+                                    <DataGridTextColumn Header="% Logrado" Binding="{Binding PorcentajeLogrado, StringFormat=N2}" Width="90"/>
+                                    <DataGridTextColumn Header="Calificado En" Binding="{Binding CalificadoEn, StringFormat=dd/MM/yyyy}" Width="110"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+
+                        <!-- Tab 2: Métricas por Curso -->
+                        <TabItem Header="Métricas por Curso" FontSize="13" FontWeight="SemiBold">
+                            <DataGrid x:Name="dgMetricasCurso" AutoGenerateColumns="False"
+                                      CanUserAddRows="False" IsReadOnly="True"
+                                      BorderBrush="#CCCCCC" BorderThickness="1"
+                                      GridLinesVisibility="All" Background="White"
+                                      RowBackground="White" AlternatingRowBackground="#F9F9F9"
+                                      HeadersVisibility="All" RowHeight="40" MaxHeight="400">
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="#8B9DC3"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="Height" Value="40"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="Padding" Value="8,0"/>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Código" Binding="{Binding Codigo}" Width="90"/>
+                                    <DataGridTextColumn Header="Curso" Binding="{Binding Curso}" Width="*"/>
+                                    <DataGridTextColumn Header="Total Evaluaciones" Binding="{Binding TotalEvaluaciones}" Width="140"/>
+                                    <DataGridTextColumn Header="Total Resultados" Binding="{Binding TotalResultados}" Width="130"/>
+                                    <DataGridTextColumn Header="Promedio Nota" Binding="{Binding PromedioNota, StringFormat=N2}" Width="120"/>
+                                    <DataGridTextColumn Header="% Aprobación" Binding="{Binding PorcentajeAprobacion, StringFormat=N2}" Width="120"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+
+                        <!-- Tab 3: Métricas por Programa (solo Admin y Coordinador) -->
+                        <TabItem x:Name="tabMetricasPrograma" Header="Métricas por Programa" FontSize="13" FontWeight="SemiBold">
+                            <DataGrid x:Name="dgMetricasPrograma" AutoGenerateColumns="False"
+                                      CanUserAddRows="False" IsReadOnly="True"
+                                      BorderBrush="#CCCCCC" BorderThickness="1"
+                                      GridLinesVisibility="All" Background="White"
+                                      RowBackground="White" AlternatingRowBackground="#F9F9F9"
+                                      HeadersVisibility="All" RowHeight="40" MaxHeight="400">
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="#8B9DC3"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="Height" Value="40"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="Padding" Value="8,0"/>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Programa" Binding="{Binding Programa}" Width="*"/>
+                                    <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="100"/>
+                                    <DataGridTextColumn Header="Total Inscritos" Binding="{Binding TotalInscritos}" Width="120"/>
+                                    <DataGridTextColumn Header="Resultados Reg." Binding="{Binding ResultadosRegistrados}" Width="130"/>
+                                    <DataGridTextColumn Header="Promedio General" Binding="{Binding PromedioGeneral, StringFormat=N2}" Width="140"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+
+                    </TabControl>
                 </Grid>
-
-                <!-- Tablas detalladas -->
-                <TabControl Grid.Row="4" Background="White" BorderBrush="#DDDDDD" MinHeight="320">
-
-                    <!-- Tab 1: Resultados detallados -->
-                    <TabItem Header="Resultados Detallados" FontSize="13" FontWeight="SemiBold">
-                        <DataGrid x:Name="dgResultadosDetallados" AutoGenerateColumns="False"
-                                  CanUserAddRows="False" IsReadOnly="True"
-                                  BorderBrush="#CCCCCC" BorderThickness="1"
-                                  GridLinesVisibility="All" Background="White"
-                                  RowBackground="White" AlternatingRowBackground="#F9F9F9"
-                                  HeadersVisibility="All" RowHeight="40" MaxHeight="400">
-                            <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="#8B9DC3"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                    <Setter Property="Height" Value="40"/>
-                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                    <Setter Property="Padding" Value="8,0"/>
-                                </Style>
-                            </DataGrid.ColumnHeaderStyle>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Participante" Binding="{Binding Participante}" Width="160"/>
-                                <DataGridTextColumn Header="Programa" Binding="{Binding Programa}" Width="*"/>
-                                <DataGridTextColumn Header="Curso" Binding="{Binding Curso}" Width="150"/>
-                                <DataGridTextColumn Header="Evaluación" Binding="{Binding Evaluacion}" Width="*"/>
-                                <DataGridTextColumn Header="Tipo" Binding="{Binding TipoEvaluacion}" Width="100"/>
-                                <DataGridTextColumn Header="Pts. Máx" Binding="{Binding PuntosMax}" Width="80"/>
-                                <DataGridTextColumn Header="Nota Final" Binding="{Binding NotaFinal}" Width="90"/>
-                                <DataGridTextColumn Header="% Logrado" Binding="{Binding PorcentajeLogrado, StringFormat=N2}" Width="90"/>
-                                <DataGridTextColumn Header="Calificado En" Binding="{Binding CalificadoEn, StringFormat=dd/MM/yyyy}" Width="110"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </TabItem>
-
-                    <!-- Tab 2: Métricas por Curso -->
-                    <TabItem Header="Métricas por Curso" FontSize="13" FontWeight="SemiBold">
-                        <DataGrid x:Name="dgMetricasCurso" AutoGenerateColumns="False"
-                                  CanUserAddRows="False" IsReadOnly="True"
-                                  BorderBrush="#CCCCCC" BorderThickness="1"
-                                  GridLinesVisibility="All" Background="White"
-                                  RowBackground="White" AlternatingRowBackground="#F9F9F9"
-                                  HeadersVisibility="All" RowHeight="40" MaxHeight="400">
-                            <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="#8B9DC3"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                    <Setter Property="Height" Value="40"/>
-                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                    <Setter Property="Padding" Value="8,0"/>
-                                </Style>
-                            </DataGrid.ColumnHeaderStyle>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Código" Binding="{Binding Codigo}" Width="90"/>
-                                <DataGridTextColumn Header="Curso" Binding="{Binding Curso}" Width="*"/>
-                                <DataGridTextColumn Header="Total Evaluaciones" Binding="{Binding TotalEvaluaciones}" Width="140"/>
-                                <DataGridTextColumn Header="Total Resultados" Binding="{Binding TotalResultados}" Width="130"/>
-                                <DataGridTextColumn Header="Promedio Nota" Binding="{Binding PromedioNota, StringFormat=N2}" Width="120"/>
-                                <DataGridTextColumn Header="% Aprobación" Binding="{Binding PorcentajeAprobacion, StringFormat=N2}" Width="120"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </TabItem>
-
-                    <!-- Tab 3: Métricas por Programa -->
-                    <TabItem Header="Métricas por Programa" FontSize="13" FontWeight="SemiBold">
-                        <DataGrid x:Name="dgMetricasPrograma" AutoGenerateColumns="False"
-                                  CanUserAddRows="False" IsReadOnly="True"
-                                  BorderBrush="#CCCCCC" BorderThickness="1"
-                                  GridLinesVisibility="All" Background="White"
-                                  RowBackground="White" AlternatingRowBackground="#F9F9F9"
-                                  HeadersVisibility="All" RowHeight="40" MaxHeight="400">
-                            <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="#8B9DC3"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                    <Setter Property="Height" Value="40"/>
-                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                    <Setter Property="Padding" Value="8,0"/>
-                                </Style>
-                            </DataGrid.ColumnHeaderStyle>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Programa" Binding="{Binding Programa}" Width="*"/>
-                                <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="100"/>
-                                <DataGridTextColumn Header="Total Inscritos" Binding="{Binding TotalInscritos}" Width="120"/>
-                                <DataGridTextColumn Header="Resultados Reg." Binding="{Binding ResultadosRegistrados}" Width="130"/>
-                                <DataGridTextColumn Header="Promedio General" Binding="{Binding PromedioGeneral, StringFormat=N2}" Width="140"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </TabItem>
-
-                </TabControl>
             </Grid>
         </ScrollViewer>
     </Grid>

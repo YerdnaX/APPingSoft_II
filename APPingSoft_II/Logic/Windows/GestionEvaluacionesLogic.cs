@@ -1,3 +1,4 @@
+using APPingSoft_II.Logic;
 using APPingSoft_II.Models;
 using APPingSoft_II.Services;
 
@@ -26,14 +27,23 @@ public class GestionEvaluacionesLogic
         return _sistema.Cursos;
     }
 
-    public (bool ok, string mensaje) InsertarEvaluacion(Evaluacion e) =>
-        _service.InsertarEvaluacion(e);
+    public (bool ok, string mensaje) InsertarEvaluacion(Evaluacion e)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarEvaluaciones(), "No tiene permisos para crear evaluaciones.");
+        return _service.InsertarEvaluacion(e);
+    }
 
-    public (bool ok, string mensaje) ActualizarEvaluacion(Evaluacion e) =>
-        _service.ActualizarEvaluacion(e);
+    public (bool ok, string mensaje) ActualizarEvaluacion(Evaluacion e)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarEvaluaciones(), "No tiene permisos para modificar evaluaciones.");
+        return _service.ActualizarEvaluacion(e);
+    }
 
-    public (bool ok, string mensaje) EliminarEvaluacion(int id) =>
-        _service.EliminarEvaluacion(id);
+    public (bool ok, string mensaje) EliminarEvaluacion(int id)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarEvaluaciones(), "No tiene permisos para eliminar evaluaciones.");
+        return _service.EliminarEvaluacion(id);
+    }
 
     // ── Criterios ─────────────────────────────────────────────────────────────
 
@@ -43,12 +53,21 @@ public class GestionEvaluacionesLogic
         return _sistema.Criterios;
     }
 
-    public (bool ok, string mensaje) InsertarCriterio(CriterioEvaluacion c) =>
-        _service.InsertarCriterio(c);
+    public (bool ok, string mensaje) InsertarCriterio(CriterioEvaluacion c)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarEvaluaciones(), "No tiene permisos para crear criterios.");
+        return _service.InsertarCriterio(c);
+    }
 
-    public (bool ok, string mensaje) ActualizarCriterio(CriterioEvaluacion c) =>
-        _service.ActualizarCriterio(c);
+    public (bool ok, string mensaje) ActualizarCriterio(CriterioEvaluacion c)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarEvaluaciones(), "No tiene permisos para modificar criterios.");
+        return _service.ActualizarCriterio(c);
+    }
 
-    public (bool ok, string mensaje) EliminarCriterio(int criterioId) =>
-        _service.EliminarCriterio(criterioId);
+    public (bool ok, string mensaje) EliminarCriterio(int criterioId)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarEvaluaciones(), "No tiene permisos para eliminar criterios.");
+        return _service.EliminarCriterio(criterioId);
+    }
 }

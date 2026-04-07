@@ -52,14 +52,17 @@ public class ReporteRepository
         return lista;
     }
 
-    public List<MetricaCurso> ObtenerMetricasCurso()
+    public List<MetricaCurso> ObtenerMetricasCurso(int? cursoId = null)
     {
         var lista = new List<MetricaCurso>();
-        const string sql = @"SELECT CursoId, Codigo, Curso, TotalEvaluaciones, TotalResultados, PromedioNota, PorcentajeAprobacion
-                             FROM dbo.vw_MetricasCurso ORDER BY Curso";
+        var sql = "SELECT CursoId, Codigo, Curso, TotalEvaluaciones, TotalResultados, PromedioNota, PorcentajeAprobacion FROM dbo.vw_MetricasCurso WHERE 1=1";
+        if (cursoId.HasValue) sql += " AND CursoId = @CursoId";
+        sql += " ORDER BY Curso";
+
         using var conn = ConexionDB.ObtenerConexion();
         conn.Open();
         using var cmd = new SqlCommand(sql, conn);
+        if (cursoId.HasValue) cmd.Parameters.AddWithValue("@CursoId", cursoId.Value);
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
@@ -77,14 +80,17 @@ public class ReporteRepository
         return lista;
     }
 
-    public List<MetricaPrograma> ObtenerMetricasPrograma()
+    public List<MetricaPrograma> ObtenerMetricasPrograma(int? programaId = null)
     {
         var lista = new List<MetricaPrograma>();
-        const string sql = @"SELECT ProgramaId, Programa, Estado, TotalInscritos, ResultadosRegistrados, PromedioGeneral
-                             FROM dbo.vw_MetricasPrograma ORDER BY Programa";
+        var sql = "SELECT ProgramaId, Programa, Estado, TotalInscritos, ResultadosRegistrados, PromedioGeneral FROM dbo.vw_MetricasPrograma WHERE 1=1";
+        if (programaId.HasValue) sql += " AND ProgramaId = @ProgramaId";
+        sql += " ORDER BY Programa";
+
         using var conn = ConexionDB.ObtenerConexion();
         conn.Open();
         using var cmd = new SqlCommand(sql, conn);
+        if (programaId.HasValue) cmd.Parameters.AddWithValue("@ProgramaId", programaId.Value);
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {

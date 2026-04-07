@@ -1,3 +1,4 @@
+using APPingSoft_II.Logic;
 using APPingSoft_II.Logic.Windows;
 using APPingSoft_II.Models;
 using System.Windows;
@@ -21,9 +22,22 @@ public partial class GestionEvaluaciones : Window
 
     private void GestionEvaluaciones_Loaded(object sender, RoutedEventArgs e)
     {
+        AplicarPermisosPorRol();
         CargarCursos();
         CargarTabla();
         LimpiarFormulario();
+    }
+
+    private void AplicarPermisosPorRol()
+    {
+        navGestionProgramas.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
+        navParticipantes.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
+        navGestionEvaluaciones.Visibility = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
+
+        bool puedeEditar = Permisos.PuedeGestionarEvaluaciones();
+        btnIngresar.IsEnabled = puedeEditar;
+        btnModificar.IsEnabled = puedeEditar;
+        btnBorrar.IsEnabled    = puedeEditar;
     }
 
     // ── Carga ─────────────────────────────────────────────────────────────────

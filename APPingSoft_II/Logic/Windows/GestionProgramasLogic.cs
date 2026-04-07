@@ -1,3 +1,4 @@
+using APPingSoft_II.Logic;
 using APPingSoft_II.Models;
 using APPingSoft_II.Services;
 
@@ -29,9 +30,21 @@ public class GestionProgramasLogic
         return _sistema.Cursos;
     }
 
-    public (bool ok, string mensaje) Insertar(Programa p) => _service.Insertar(p);
+    public (bool ok, string mensaje) Insertar(Programa p)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarProgramas(), "No tiene permisos para crear programas.");
+        return _service.Insertar(p);
+    }
 
-    public (bool ok, string mensaje) Actualizar(Programa p) => _service.Actualizar(p);
+    public (bool ok, string mensaje) Actualizar(Programa p)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarProgramas(), "No tiene permisos para modificar programas.");
+        return _service.Actualizar(p);
+    }
 
-    public (bool ok, string mensaje) Eliminar(int programaId) => _service.Eliminar(programaId);
+    public (bool ok, string mensaje) Eliminar(int programaId)
+    {
+        Permisos.Requerir(Permisos.PuedeGestionarProgramas(), "No tiene permisos para eliminar programas.");
+        return _service.Eliminar(programaId);
+    }
 }

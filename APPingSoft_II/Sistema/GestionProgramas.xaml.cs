@@ -1,3 +1,4 @@
+using APPingSoft_II.Logic;
 using APPingSoft_II.Logic.Windows;
 using APPingSoft_II.Models;
 using System.Windows;
@@ -20,9 +21,22 @@ public partial class GestionProgramas : Window
 
     private void GestionProgramas_Loaded(object sender, RoutedEventArgs e)
     {
+        AplicarPermisosPorRol();
         CargarCombos();
         CargarTabla();
         LimpiarFormulario();
+    }
+
+    private void AplicarPermisosPorRol()
+    {
+        navGestionProgramas.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
+        navParticipantes.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
+        navGestionEvaluaciones.Visibility = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
+
+        bool puedeEditar = Permisos.PuedeGestionarProgramas();
+        btnIngresar.IsEnabled = puedeEditar;
+        btnModificar.IsEnabled = puedeEditar;
+        btnBorrar.IsEnabled    = puedeEditar;
     }
 
     // ── Carga de datos ────────────────────────────────────────────────────────

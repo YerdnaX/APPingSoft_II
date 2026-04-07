@@ -1,3 +1,4 @@
+using APPingSoft_II.Logic;
 using APPingSoft_II.Models;
 using APPingSoft_II.Services;
 
@@ -30,9 +31,21 @@ public class RegistroResultadosLogic
         return _sistema.Resultados;
     }
 
-    public (bool ok, string mensaje) Insertar(ResultadoEvaluacion r) => _service.Insertar(r);
+    public (bool ok, string mensaje) Insertar(ResultadoEvaluacion r)
+    {
+        Permisos.Requerir(Permisos.PuedeRegistrarResultados(), "No tiene permisos para registrar resultados.");
+        return _service.Insertar(r);
+    }
 
-    public (bool ok, string mensaje) Actualizar(ResultadoEvaluacion r) => _service.Actualizar(r);
+    public (bool ok, string mensaje) Actualizar(ResultadoEvaluacion r)
+    {
+        Permisos.Requerir(Permisos.PuedeRegistrarResultados(), "No tiene permisos para modificar resultados.");
+        return _service.Actualizar(r);
+    }
 
-    public (bool ok, string mensaje) Eliminar(int resultadoId) => _service.Eliminar(resultadoId);
+    public (bool ok, string mensaje) Eliminar(int resultadoId)
+    {
+        Permisos.Requerir(Permisos.PuedeRegistrarResultados(), "No tiene permisos para eliminar resultados.");
+        return _service.Eliminar(resultadoId);
+    }
 }

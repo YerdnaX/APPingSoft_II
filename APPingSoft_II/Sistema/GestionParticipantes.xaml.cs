@@ -1,3 +1,4 @@
+using APPingSoft_II.Logic;
 using APPingSoft_II.Logic.Windows;
 using APPingSoft_II.Models;
 using System.Windows;
@@ -19,8 +20,21 @@ public partial class GestionParticipantes : Window
 
     private void GestionParticipantes_Loaded(object sender, RoutedEventArgs e)
     {
+        AplicarPermisosPorRol();
         CargarTabla();
         LimpiarFormulario();
+    }
+
+    private void AplicarPermisosPorRol()
+    {
+        navGestionProgramas.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
+        navParticipantes.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
+        navGestionEvaluaciones.Visibility = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
+
+        bool puedeEditar = Permisos.PuedeGestionarParticipantes();
+        btnIngresar.IsEnabled = puedeEditar;
+        btnModificar.IsEnabled = puedeEditar;
+        btnBorrar.IsEnabled    = puedeEditar;
     }
 
     // ── Carga de datos ────────────────────────────────────────────────────────

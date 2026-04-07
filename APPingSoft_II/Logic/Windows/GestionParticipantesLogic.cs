@@ -1,3 +1,4 @@
+using APPingSoft_II.Logic;
 using APPingSoft_II.Models;
 using APPingSoft_II.Services;
 
@@ -22,6 +23,7 @@ public class GestionParticipantesLogic
 
     public (bool ok, string mensaje) Insertar(Participante p)
     {
+        Permisos.Requerir(Permisos.PuedeGestionarParticipantes(), "No tiene permisos para registrar participantes.");
         var resultado = _service.Insertar(p);
         if (resultado.ok) _sistema.RecargarParticipantes();
         return resultado;
@@ -29,6 +31,7 @@ public class GestionParticipantesLogic
 
     public (bool ok, string mensaje) Actualizar(Participante p)
     {
+        Permisos.Requerir(Permisos.PuedeGestionarParticipantes(), "No tiene permisos para modificar participantes.");
         var resultado = _service.Actualizar(p);
         if (resultado.ok) _sistema.RecargarParticipantes();
         return resultado;
@@ -36,6 +39,7 @@ public class GestionParticipantesLogic
 
     public (bool ok, string mensaje) Desactivar(int participanteId)
     {
+        Permisos.Requerir(Permisos.PuedeGestionarParticipantes(), "No tiene permisos para desactivar participantes.");
         var resultado = _service.Desactivar(participanteId);
         if (resultado.ok) _sistema.RecargarParticipantes();
         return resultado;

@@ -85,12 +85,12 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
                     <TextBlock Text="Home" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrHome"/>
-                    <TextBlock Text="Gestion de programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navGestionProgramas" Text="Gestion de programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionProgramas"/>
-                    <TextBlock Text="Gestionar participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navParticipantes" Text="Gestionar participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                FontWeight="SemiBold"
                                MouseLeftButtonDown="IrParticipantes"/>
-                    <TextBlock Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navGestionEvaluaciones" Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionEvaluaciones"/>
                     <TextBlock Text="Registrar Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrRegistrarResultados"/>

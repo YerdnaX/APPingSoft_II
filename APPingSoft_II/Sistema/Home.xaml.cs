@@ -1,3 +1,4 @@
+using APPingSoft_II.Logic;
 using APPingSoft_II.Logic.Windows;
 using System.Windows;
 using System.Windows.Input;
@@ -17,12 +18,20 @@ public partial class Home : Window
     private void Home_Loaded(object sender, RoutedEventArgs e)
     {
         var nombre = _logic.ObtenerNombreUsuario();
-        var rol = _logic.ObtenerRolUsuario();
+        var rol    = _logic.ObtenerRolUsuario();
         if (!string.IsNullOrEmpty(nombre))
         {
             lblBienvenida.Text = $"Bienvenido, {nombre}";
-            lblRol.Text = rol;
+            lblRol.Text        = rol;
         }
+        AplicarPermisosPorRol();
+    }
+
+    private void AplicarPermisosPorRol()
+    {
+        navGestionProgramas.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
+        navParticipantes.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
+        navGestionEvaluaciones.Visibility = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
     }
 
     // ── Cerrar sesión ─────────────────────────────────────────────────────────
