@@ -61,24 +61,24 @@
                             </Rectangle.Fill>
                         </Rectangle>
                     </Border>
-                    <TextBlock Text="Evaluacion de Curso" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="Evaluacion de Curso" FontSize="13" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
                 <Rectangle Grid.Column="1" Width="1" Fill="#AAAACC" Margin="0,10"/>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
                     <TextBlock Text="Home" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrHome"/>
+                               MouseLeftButtonDown="IrHome" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionProgramas" Text="Gestion de programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrGestionProgramas"/>
+                               MouseLeftButtonDown="IrGestionProgramas" FontWeight="Bold"/>
                     <TextBlock x:Name="navParticipantes" Text="Gestionar participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrParticipantes"/>
+                               MouseLeftButtonDown="IrParticipantes" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionEvaluaciones" Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrGestionEvaluaciones"/>
+                               MouseLeftButtonDown="IrGestionEvaluaciones" FontWeight="Bold"/>
                     <TextBlock Text="Registrar Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrRegistrarResultados"/>
+                               MouseLeftButtonDown="IrRegistrarResultados" FontWeight="Bold"/>
                     <TextBlock Text="Reportes y Metricas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrReportes"/>
+                               MouseLeftButtonDown="IrReportes" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionUsuarios" Text="Gestion de Usuarios" FontSize="12" Foreground="White"
-                               Margin="10,0" Cursor="Hand" MouseLeftButtonDown="IrGestionUsuarios"/>
+                               Margin="10,0" Cursor="Hand" MouseLeftButtonDown="IrGestionUsuarios" FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -95,19 +95,19 @@
                 </Grid.RowDefinitions>
 
                 <!-- Título -->
-                <TextBlock Grid.Row="0" Text="Reportes y Métricas" FontSize="28" FontWeight="Light"
-                           Foreground="#888888" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                <TextBlock Grid.Row="0" Text="Reportes y Métricas" FontSize="28" FontWeight="Bold"
+                           Foreground="#FF413E3E" HorizontalAlignment="Center" Margin="0,0,0,16"/>
 
                 <!-- Filtros -->
                 <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="16,12" Margin="0,0,0,20">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="Filtrar por Programa:" VerticalAlignment="Center"
-                                   FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="0,0,8,0"/>
+                                   FontSize="13" FontWeight="Bold" Foreground="#555" Margin="0,0,8,0"/>
                         <ComboBox x:Name="cmbFiltroPrograma" Style="{StaticResource FormCombo}" Width="220"
                                   DisplayMemberPath="Nombre" SelectedValuePath="ProgramaId"
                                   SelectionChanged="CmbFiltroPrograma_SelectionChanged"/>
                         <TextBlock Text="Filtrar por Curso:" VerticalAlignment="Center"
-                                   FontSize="13" FontWeight="SemiBold" Foreground="#555" Margin="0,0,8,0"/>
+                                   FontSize="13" FontWeight="Bold" Foreground="#555" Margin="0,0,8,0"/>
                         <ComboBox x:Name="cmbFiltroCurso" Style="{StaticResource FormCombo}" Width="220"
                                   DisplayMemberPath="Nombre" SelectedValuePath="CursoId"
                                   SelectionChanged="CmbFiltroCurso_SelectionChanged"/>
@@ -274,7 +274,7 @@
                                       HeadersVisibility="All" RowHeight="40" MaxHeight="400">
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
-                                        <Setter Property="Background" Value="#8B9DC3"/>
+                                        <Setter Property="Background" Value="#FF0041E5"/>
                                         <Setter Property="Foreground" Value="White"/>
                                         <Setter Property="Height" Value="40"/>
                                         <Setter Property="FontWeight" Value="SemiBold"/>

@@ -20,7 +20,7 @@
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Foreground" Value="#333333"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,0,0,18"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
         </Style>
         <Style x:Key="FormCombo" TargetType="ComboBox">
             <Setter Property="Height" Value="40"/>
@@ -29,7 +29,8 @@
             <Setter Property="Padding" Value="10,0"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Foreground" Value="#333333"/>
-            <Setter Property="Margin" Value="0,0,0,18"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
         <Style x:Key="ActionBtn" TargetType="Button">
             <Setter Property="Height" Value="42"/>
@@ -59,7 +60,13 @@
         </Grid.RowDefinitions>
 
         <!-- NAVBAR -->
-        <Border Grid.Row="0" Background="#FF0138E2">
+        <Border Grid.Row="0">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0006E8" Offset="0.62"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
             <Grid Margin="20,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -79,24 +86,24 @@
                             </Rectangle.Fill>
                         </Rectangle>
                     </Border>
-                    <TextBlock Text="Evaluacion de Curso" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="Evaluacion de Curso" FontSize="13" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
                 <Rectangle Grid.Column="1" Width="1" Fill="#AAAACC" Margin="0,10"/>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
                     <TextBlock Text="Home" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrHome"/>
+                               MouseLeftButtonDown="IrHome" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionProgramas" Text="Gestion de programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrGestionProgramas"/>
+                               MouseLeftButtonDown="IrGestionProgramas" FontWeight="Bold"/>
                     <TextBlock x:Name="navParticipantes" Text="Gestionar participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrParticipantes"/>
+                               MouseLeftButtonDown="IrParticipantes" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionEvaluaciones" Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrGestionEvaluaciones"/>
+                               MouseLeftButtonDown="IrGestionEvaluaciones" FontWeight="Bold"/>
                     <TextBlock Text="Registrar Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrRegistrarResultados"/>
+                               MouseLeftButtonDown="IrRegistrarResultados" FontWeight="Bold"/>
                     <TextBlock Text="Reportes y Metricas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrReportes"/>
+                               MouseLeftButtonDown="IrReportes" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionUsuarios" Text="Gestion de Usuarios" FontSize="12" Foreground="White"
-                               Margin="10,0" Cursor="Hand" MouseLeftButtonDown="IrGestionUsuarios"/>
+                               Margin="10,0" Cursor="Hand" MouseLeftButtonDown="IrGestionUsuarios" FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -108,8 +115,8 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Gestion de Programas" FontSize="28" FontWeight="Light"
-                       Foreground="#888888" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+            <TextBlock Grid.Row="0" Text="Gestion de Programas" FontSize="28" FontWeight="Bold"
+                       Foreground="#FF413E3E" HorizontalAlignment="Center" Margin="0,0,0,30"/>
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -120,30 +127,32 @@
                 <!-- Formulario -->
                 <StackPanel Grid.Column="0" Margin="0,0,60,0">
 
-                    <TextBlock Text="NOMBRE DEL PROGRAMA" Style="{StaticResource FormLabel}"/>
+                    <TextBlock Text="NOMBRE DEL PROGRAMA" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
                     <TextBox x:Name="txtNombre" Style="{StaticResource FormInput}"/>
 
-                    <TextBlock Text="FECHA INICIO" Style="{StaticResource FormLabel}"/>
+                    <TextBlock Text="FECHA INICIO" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
                     <DatePicker x:Name="dpFechaInicio" Height="40" Background="#F0F0F0"
-                                BorderThickness="0" FontSize="13" Margin="0,0,0,18"/>
+                                BorderThickness="0" FontSize="13" Margin="0,0,0,18"
+                                VerticalContentAlignment="Center" Padding="10,0"/>
 
                     <TextBlock Text="FECHA FIN" Style="{StaticResource FormLabel}"/>
                     <DatePicker x:Name="dpFechaFin" Height="40" Background="#F0F0F0"
-                                BorderThickness="0" FontSize="13" Margin="0,0,0,18"/>
+                                BorderThickness="0" FontSize="13" Margin="0,0,0,18"
+                                VerticalContentAlignment="Center" Padding="10,0"/>
 
-                    <TextBlock Text="ESTADO" Style="{StaticResource FormLabel}"/>
+                    <TextBlock Text="ESTADO" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
                     <ComboBox x:Name="cmbEstado" Style="{StaticResource FormCombo}">
                         <ComboBoxItem Content="Activo"/>
                         <ComboBoxItem Content="Inactivo"/>
                         <ComboBoxItem Content="Finalizado"/>
                     </ComboBox>
 
-                    <TextBlock Text="INSTRUCTOR" Style="{StaticResource FormLabel}"/>
+                    <TextBlock Text="INSTRUCTOR" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
                     <ComboBox x:Name="cmbInstructor" Style="{StaticResource FormCombo}"
                               DisplayMemberPath="NombreCompleto"
                               SelectedValuePath="InstructorId"/>
 
-                    <TextBlock Text="CURSO" Style="{StaticResource FormLabel}"/>
+                    <TextBlock Text="CURSO" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
                     <ComboBox x:Name="cmbCurso" Style="{StaticResource FormCombo}"
                               DisplayMemberPath="Nombre"
                               SelectedValuePath="CursoId"/>
@@ -151,11 +160,11 @@
                     <!-- Botones -->
                     <StackPanel Orientation="Vertical" Margin="0,20,0,0">
                         <Button x:Name="btnIngresar" Content="Ingresar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10" Click="BtnIngresar_Click"/>
+                                Margin="0,0,0,10" Click="BtnIngresar_Click" Background="#FF0041E5"/>
                         <Button x:Name="btnModificar" Content="Modificar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10" Click="BtnModificar_Click"/>
+                                Margin="0,0,0,10" Click="BtnModificar_Click" Background="#FF0041E5"/>
                         <Button x:Name="btnBorrar" Content="Borrar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10" Click="BtnBorrar_Click"/>
+                                Margin="0,0,0,10" Click="BtnBorrar_Click" Background="#FF0041E5"/>
                     </StackPanel>
                 </StackPanel>
 
@@ -209,28 +218,79 @@
                     <DataGrid x:Name="dgProgramas" Grid.Row="1" AutoGenerateColumns="False"
                               SelectionChanged="DgProgramas_SelectionChanged"
                               CanUserAddRows="False" IsReadOnly="True"
-                              BorderBrush="#333333" BorderThickness="1"
-                              GridLinesVisibility="All" Background="White"
-                              RowBackground="White" AlternatingRowBackground="#F9F9F9"
-                              HeadersVisibility="All" RowHeight="45">
+                              BorderBrush="#E2E8F0" BorderThickness="1"
+                              GridLinesVisibility="None"
+                              Background="White"
+                              RowBackground="White"
+                              AlternatingRowBackground="#F5F7FF"
+                              HeadersVisibility="All"
+                              RowHeight="38"
+                              ColumnHeaderHeight="44">
+
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#D6DFFF"/>
+                                        <Setter Property="Foreground" Value="#0033BB"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#EBF0FF"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Padding" Value="10,0"/>
+                                <Setter Property="FontSize" Value="13"/>
+                                <Setter Property="Foreground" Value="#413E3E"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="#0033BB"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                            <Style TargetType="DataGridRowHeader">
+                                <Setter Property="Width" Value="0"/>
+                            </Style>
+                        </DataGrid.Resources>
+
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="Background" Value="#8B9DC3"/>
+                                <Setter Property="Background" Value="#0041E5"/>
                                 <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Height" Value="45"/>
+                                <Setter Property="Height" Value="44"/>
                                 <Setter Property="FontWeight" Value="SemiBold"/>
-                                <Setter Property="BorderBrush" Value="#333333"/>
-                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                <Setter Property="FontSize" Value="12"/>
+                                <Setter Property="BorderBrush" Value="#1A55FF"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,0"/>
                                 <Setter Property="Padding" Value="10,0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="DataGridColumnHeader">
+                                            <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
+
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding ProgramaId}" Width="60"/>
-                            <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
-                            <DataGridTextColumn Header="Fecha Inicio" Binding="{Binding FechaInicio, StringFormat=dd/MM/yyyy}" Width="120"/>
-                            <DataGridTextColumn Header="Fecha Fin" Binding="{Binding FechaFin, StringFormat=dd/MM/yyyy}" Width="120"/>
-                            <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="100"/>
-                            <DataGridTextColumn Header="Instructor" Binding="{Binding Instructor.NombreCompleto}" Width="160"/>
+                            <DataGridTextColumn Header="ID"           Binding="{Binding ProgramaId}"                              Width="60"/>
+                            <DataGridTextColumn Header="Nombre"       Binding="{Binding Nombre}"                                  Width="*"/>
+                            <DataGridTextColumn Header="Fecha Inicio" Binding="{Binding FechaInicio, StringFormat=dd/MM/yyyy}"    Width="120"/>
+                            <DataGridTextColumn Header="Fecha Fin"    Binding="{Binding FechaFin, StringFormat=dd/MM/yyyy}"       Width="120"/>
+                            <DataGridTextColumn Header="Estado"       Binding="{Binding Estado}"                                  Width="100"/>
+                            <DataGridTextColumn Header="Instructor"   Binding="{Binding Instructor.NombreCompleto}"               Width="160"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

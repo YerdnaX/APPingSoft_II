@@ -38,7 +38,7 @@
                             </Rectangle.Fill>
                         </Rectangle>
                     </Border>
-                    <TextBlock Text="Evaluacion de Curso" FontSize="13" FontWeight="SemiBold"
+                    <TextBlock Text="Evaluacion de Curso" FontSize="13" FontWeight="Bold"
                                Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
 
@@ -48,28 +48,28 @@
                 <!-- Links -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top" Margin="15,22,15,0" Grid.RowSpan="2">
                     <TextBlock Text="Home" FontSize="12" Foreground="White" Margin="10,0" VerticalAlignment="Center" Cursor="Hand"
-                               MouseLeftButtonDown="IrHome"/>
+                               MouseLeftButtonDown="IrHome" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionProgramas" Text="Gestion de programas" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrGestionProgramas"/>
+                               MouseLeftButtonDown="IrGestionProgramas" FontWeight="Bold"/>
                     <TextBlock x:Name="navParticipantes" Text="Gestionar participantes" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrParticipantes"/>
+                               MouseLeftButtonDown="IrParticipantes" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionEvaluaciones" Text="Gestion de Evaluaciones" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrGestionEvaluaciones"/>
+                               MouseLeftButtonDown="IrGestionEvaluaciones" FontWeight="Bold"/>
                     <TextBlock Text="Registrar Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrRegistrarResultados"/>
+                               MouseLeftButtonDown="IrRegistrarResultados" FontWeight="Bold"/>
                     <TextBlock Text="Reportes y Metricas" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrReportes"/>
+                               MouseLeftButtonDown="IrReportes" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionUsuarios" Text="Gestion de Usuarios" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand"
-                               MouseLeftButtonDown="IrGestionUsuarios"/>
+                               MouseLeftButtonDown="IrGestionUsuarios" FontWeight="Bold"/>
                 </StackPanel>
 
                 <!-- Cerrar Sesión -->
-                <Border Grid.Column="4" Background="#5C6BC0" CornerRadius="6" Width="140" Height="42" Cursor="Hand"
+                <Border Grid.Column="4" CornerRadius="6" Width="140" Height="42" Cursor="Hand"
                         Grid.RowSpan="2" MouseLeftButtonDown="BtnCerrarSesion_Click">
                     <TextBlock Text="Cerrar Sesión" Foreground="White" FontSize="13" FontWeight="SemiBold"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -104,7 +104,7 @@
                     <!-- Imagen principal -->
                     <StackPanel Grid.Row="1" Orientation="Horizontal"
                                 HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Image Source="/Imagenes/Caras.jpg" Stretch="Uniform" MaxHeight="900" Width="1297" Height="512"/>
+                        <Image Source="/Imagenes/Caras.jpg" Stretch="Uniform" MaxHeight="1000" Width="1297" Height="512"/>
                     </StackPanel>
 
                     <TextBlock Grid.Row="2" Text="Sistema Planificador de Evaluación de Capacitaciones"
