@@ -79,6 +79,33 @@ public class UsuarioRepository
         cmd.ExecuteNonQuery();
     }
 
+    /// <summary>Desactiva un usuario (borrado lógico). No elimina el registro.</summary>
+    public void Desactivar(int id)
+    {
+        const string sql = "UPDATE dbo.Usuarios SET Estado = N'Inactivo' WHERE UsuarioId = @Id";
+        using var conn = ConexionDB.ObtenerConexion();
+        conn.Open();
+        using var cmd = new SqlCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@Id", id);
+        cmd.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    /// Verifica si el correo ya existe para otro usuario (para validación de unicidad).
+    /// excluirId = 0 en insert, = UsuarioId del usuario a modificar.
+    /// </summary>
+    public bool ExisteCorreo(string correo, int excluirId = 0)
+    {
+        const string sql = @"SELECT COUNT(1) FROM dbo.Usuarios
+                             WHERE CorreoElectronico = @Correo AND UsuarioId <> @ExcluirId";
+        using var conn = ConexionDB.ObtenerConexion();
+        conn.Open();
+        using var cmd = new SqlCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@Correo", correo.Trim().ToLower());
+        cmd.Parameters.AddWithValue("@ExcluirId", excluirId);
+        return (int)cmd.ExecuteScalar()! > 0;
+    }
+
     private static Usuario MapearUsuario(SqlDataReader r) => new()
     {
         UsuarioId = r.GetInt32(0),

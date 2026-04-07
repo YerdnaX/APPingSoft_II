@@ -1,7 +1,7 @@
-﻿<Window x:Class="APPingSoft_II.Sistema.GestionEvaluaciones"
+<Window x:Class="APPingSoft_II.Sistema.GestionUsuarios"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Gestión de Evaluaciones" Height="700" Width="1280"
+        Title="Gestión de Usuarios" Height="850" Width="1280"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
 
@@ -30,12 +30,6 @@
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Foreground" Value="#333333"/>
             <Setter Property="Margin" Value="0,0,0,18"/>
-        </Style>
-        <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#3D4A6B"/>
-            <Setter Property="Margin" Value="0,10,0,10"/>
         </Style>
         <Style x:Key="ActionBtn" TargetType="Button">
             <Setter Property="Height" Value="42"/>
@@ -71,8 +65,6 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
                     <Border Width="34" Height="34" Margin="0,0,8,0">
@@ -102,7 +94,8 @@
                     <TextBlock Text="Reportes y Metricas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrReportes"/>
                     <TextBlock x:Name="navGestionUsuarios" Text="Gestion de Usuarios" FontSize="12" Foreground="White"
-                               Margin="10,0" Cursor="Hand" MouseLeftButtonDown="IrGestionUsuarios"/>
+                               FontWeight="SemiBold" Margin="10,0" Cursor="Hand"
+                               MouseLeftButtonDown="IrGestionUsuarios"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -114,8 +107,8 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Gestion de Evaluaciones" FontSize="28" FontWeight="Light"
-                       Foreground="#888888" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+            <TextBlock Grid.Row="0" Text="Gestion de Usuarios" FontSize="28" FontWeight="Light"
+                       Foreground="#888888" HorizontalAlignment="Center" Margin="0,0,0,30"/>
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -123,78 +116,50 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,60,0">
-                    <StackPanel>
+                <!-- FORMULARIO -->
+                <StackPanel Grid.Column="0" Margin="0,0,60,0">
 
-      
-                        <TextBlock Text="— EVALUACIÓN" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="NOMBRE COMPLETO" Style="{StaticResource FormLabel}"/>
+                    <TextBox x:Name="txtNombre" Style="{StaticResource FormInput}"/>
 
-            
-                        <TextBlock Text="CURSO" Style="{StaticResource FormLabel}"/>
-                        <ComboBox x:Name="cmbCurso" Style="{StaticResource FormCombo}"
-                                  DisplayMemberPath="Nombre"
-                                  SelectedValuePath="CursoId"/>
+                    <TextBlock Text="CORREO ELECTRÓNICO" Style="{StaticResource FormLabel}"/>
+                    <TextBox x:Name="txtCorreo" Style="{StaticResource FormInput}"/>
 
-       
-                        <TextBlock Text="TÍTULO" Style="{StaticResource FormLabel}"/>
-                        <TextBox x:Name="txtTitulo" Style="{StaticResource FormInput}"/>
+                    <TextBlock Text="CONTRASEÑA" Style="{StaticResource FormLabel}"/>
+                    <PasswordBox x:Name="pwdContrasena" Height="40" Background="#F0F0F0"
+                                 BorderThickness="0" FontSize="13" Padding="10,0"
+                                 VerticalContentAlignment="Center" Margin="0,0,0,4"/>
+                    <TextBlock Text="Dejar vacío para conservar contraseña al modificar"
+                               FontSize="10" Foreground="#AAAAAA" Margin="0,0,0,14"/>
 
-          
-                        <TextBlock Text="TIPO DE EVALUACIÓN" Style="{StaticResource FormLabel}"/>
-                        <ComboBox x:Name="cmbTipo" Style="{StaticResource FormCombo}">
-                            <ComboBoxItem Content="Diagnóstica"/>
-                            <ComboBoxItem Content="Formativa"/>
-                            <ComboBoxItem Content="Sumativa"/>
-                        </ComboBox>
+                    <TextBlock Text="ROL" Style="{StaticResource FormLabel}"/>
+                    <ComboBox x:Name="cmbRol" Style="{StaticResource FormCombo}">
+                        <ComboBoxItem Content="Administrador"/>
+                        <ComboBoxItem Content="Coordinador"/>
+                        <ComboBoxItem Content="Instructor"/>
+                    </ComboBox>
 
-             
-                        <TextBlock Text="MOMENTO" Style="{StaticResource FormLabel}"/>
-                        <TextBox x:Name="txtMomento" Style="{StaticResource FormInput}"/>
+                    <TextBlock Text="ESTADO" Style="{StaticResource FormLabel}"/>
+                    <ComboBox x:Name="cmbEstado" Style="{StaticResource FormCombo}">
+                        <ComboBoxItem Content="Activo"/>
+                        <ComboBoxItem Content="Inactivo"/>
+                    </ComboBox>
 
-                        <TextBlock Text="FECHA APERTURA" Style="{StaticResource FormLabel}"/>
-                        <DatePicker x:Name="dpFechaApertura" Height="40" Background="#F0F0F0"
-                                    BorderThickness="0" FontSize="13" Margin="0,0,0,18"/>
-
-                        <TextBlock Text="FECHA CIERRE" Style="{StaticResource FormLabel}"/>
-                        <DatePicker x:Name="dpFechaCierre" Height="40" Background="#F0F0F0"
-                                    BorderThickness="0" FontSize="13" Margin="0,0,0,18"/>
-
-         
-                        <TextBlock Text="PUNTOS MÁXIMOS" Style="{StaticResource FormLabel}"/>
-                        <TextBox x:Name="txtPuntosMax" Style="{StaticResource FormInput}"/>
-
-                        <TextBlock Text="ESTADO" Style="{StaticResource FormLabel}"/>
-                        <ComboBox x:Name="cmbEstado" Style="{StaticResource FormCombo}">
-                            <ComboBoxItem Content="Activo"/>
-                            <ComboBoxItem Content="Cerrado"/>
-                            <ComboBoxItem Content="Pendiente"/>
-                        </ComboBox>
-
-                        <TextBlock Text="— CRITERIO" Style="{StaticResource SectionTitle}"/>
-
-                        <TextBlock Text="NOMBRE CRITERIO" Style="{StaticResource FormLabel}"/>
-                        <TextBox x:Name="txtCriterio" Style="{StaticResource FormInput}"/>
-
-                        <TextBlock Text="PONDERACIÓN" Style="{StaticResource FormLabel}"/>
-                        <TextBox x:Name="txtPonderacion" Style="{StaticResource FormInput}"/>
-
-
-                        <TextBlock Text="PUNTOS MÁX. CRITERIO" Style="{StaticResource FormLabel}"/>
-                        <TextBox x:Name="txtPuntosMaxCriterio" Style="{StaticResource FormInput}"/>
-
-                        <!-- Botones -->
-                        <StackPanel Orientation="Vertical" Margin="0,10,0,0">
-                            <Button x:Name="btnIngresar" Content="Ingresar" Style="{StaticResource ActionBtn}"
-                                    Margin="0,0,0,10" Click="BtnIngresar_Click"/>
-                            <Button x:Name="btnModificar" Content="Modificar" Style="{StaticResource ActionBtn}"
-                                    Margin="0,0,0,10" Click="BtnModificar_Click"/>
-                            <Button x:Name="btnBorrar" Content="Borrar" Style="{StaticResource ActionBtn}"
-                                    Margin="0,0,0,10" Click="BtnBorrar_Click"/>
-                        </StackPanel>
+                    <!-- Botones de acción -->
+                    <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+                        <Button x:Name="btnIngresar" Content="Ingresar" Style="{StaticResource ActionBtn}"
+                                Margin="0,0,0,10" Click="BtnIngresar_Click"/>
+                        <Button x:Name="btnModificar" Content="Modificar" Style="{StaticResource ActionBtn}"
+                                Margin="0,0,0,10" Click="BtnModificar_Click"/>
+                        <Button x:Name="btnBorrar" Content="Borrar" Style="{StaticResource ActionBtn}"
+                                Margin="0,0,0,10" Click="BtnBorrar_Click"/>
+                        <Button x:Name="btnLimpiar" Content="Limpiar" Style="{StaticResource ActionBtn}"
+                                Margin="0,0,0,10" Background="#888888" Click="BtnLimpiar_Click"/>
                     </StackPanel>
-                </ScrollViewer>
 
-                <!-- Tabla con búsqueda -->
+                </StackPanel>
+
+                <!-- LADO DERECHO: búsqueda + tabla -->
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -241,13 +206,13 @@
                     </Grid>
 
                     <!-- Tabla -->
-                    <DataGrid x:Name="dgEvaluaciones" Grid.Row="1" AutoGenerateColumns="False"
-                              SelectionChanged="DgEvaluaciones_SelectionChanged"
+                    <DataGrid x:Name="dgUsuarios" Grid.Row="1" AutoGenerateColumns="False"
                               CanUserAddRows="False" IsReadOnly="True"
                               BorderBrush="#333333" BorderThickness="1"
                               GridLinesVisibility="All" Background="White"
                               RowBackground="White" AlternatingRowBackground="#F9F9F9"
-                              HeadersVisibility="All" RowHeight="45">
+                              HeadersVisibility="All" RowHeight="45"
+                              SelectionChanged="DgUsuarios_SelectionChanged">
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Background" Value="#8B9DC3"/>
@@ -260,20 +225,17 @@
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding EvaluacionId}" Width="60"/>
-                            <DataGridTextColumn Header="Título" Binding="{Binding Titulo}" Width="*"/>
-                            <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="110"/>
-                            <DataGridTextColumn Header="Momento" Binding="{Binding Momento}" Width="110"/>
-                            <DataGridTextColumn Header="F. Apertura" Binding="{Binding FechaApertura, StringFormat=dd/MM/yyyy}" Width="100"/>
-                            <DataGridTextColumn Header="F. Cierre" Binding="{Binding FechaCierre, StringFormat=dd/MM/yyyy}" Width="100"/>
-                            <DataGridTextColumn Header="Pts. Máx" Binding="{Binding PuntosMax}" Width="80"/>
+                            <DataGridTextColumn Header="ID" Binding="{Binding UsuarioId}" Width="60"/>
+                            <DataGridTextColumn Header="Nombre Completo" Binding="{Binding NombreCompleto}" Width="*"/>
+                            <DataGridTextColumn Header="Correo" Binding="{Binding CorreoElectronico}" Width="*"/>
+                            <DataGridTextColumn Header="Rol" Binding="{Binding Rol}" Width="120"/>
                             <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="90"/>
+                            <DataGridTextColumn Header="Fecha Registro" Binding="{Binding FechaCreacion, StringFormat=dd/MM/yyyy}" Width="120"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
+
             </Grid>
         </Grid>
     </Grid>
 </Window>
-
-

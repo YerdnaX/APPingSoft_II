@@ -32,6 +32,7 @@ public partial class GestionProgramas : Window
         navGestionProgramas.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
         navParticipantes.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
         navGestionEvaluaciones.Visibility = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
+        navGestionUsuarios.Visibility     = Permisos.VisibleSi(Permisos.PuedeAccederGestionUsuarios());
 
         bool puedeEditar = Permisos.PuedeGestionarProgramas();
         btnIngresar.IsEnabled = puedeEditar;
@@ -247,10 +248,11 @@ public partial class GestionProgramas : Window
 
     // ── Navegación ────────────────────────────────────────────────────────────
 
-    private void IrHome(object sender, MouseButtonEventArgs e) { new Home().Show(); this.Close(); }
-    private void IrGestionProgramas(object sender, MouseButtonEventArgs e) { new GestionProgramas().Show(); this.Close(); }
+    private void IrHome(object sender, MouseButtonEventArgs e)                { new Home().Show(); this.Close(); }
+    private void IrGestionProgramas(object sender, MouseButtonEventArgs e)    { new GestionProgramas().Show(); this.Close(); }
     private void IrGestionEvaluaciones(object sender, MouseButtonEventArgs e) { new GestionEvaluaciones().Show(); this.Close(); }
     private void IrRegistrarResultados(object sender, MouseButtonEventArgs e) { new RegistroResultados().Show(); this.Close(); }
-    private void IrReportes(object sender, MouseButtonEventArgs e) { new ReporteMetricas().Show(); this.Close(); }
-    private void IrParticipantes(object sender, MouseButtonEventArgs e) { new GestionParticipantes().Show(); this.Close(); }
+    private void IrReportes(object sender, MouseButtonEventArgs e)            { new ReporteMetricas().Show(); this.Close(); }
+    private void IrParticipantes(object sender, MouseButtonEventArgs e)       { new GestionParticipantes().Show(); this.Close(); }
+    private void IrGestionUsuarios(object sender, MouseButtonEventArgs e)     { new GestionUsuarios().Show(); this.Close(); }
 }

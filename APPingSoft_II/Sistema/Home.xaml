@@ -63,6 +63,9 @@
                     <TextBlock Text="Reportes y Metricas" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrReportes"/>
+                    <TextBlock x:Name="navGestionUsuarios" Text="Gestion de Usuarios" FontSize="12" Foreground="White"
+                               Margin="10,0" Cursor="Hand"
+                               MouseLeftButtonDown="IrGestionUsuarios"/>
                 </StackPanel>
 
                 <!-- Cerrar Sesión -->

@@ -11,6 +11,7 @@ public partial class RegistroResultados : Window
 {
     private readonly RegistroResultadosLogic _logic = new();
     private int _resultadoSeleccionadoId = 0;
+    private List<ResultadoEvaluacion> _todosResultados = new();
 
     public RegistroResultados()
     {
@@ -31,6 +32,7 @@ public partial class RegistroResultados : Window
         navGestionProgramas.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
         navParticipantes.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
         navGestionEvaluaciones.Visibility = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
+        navGestionUsuarios.Visibility     = Permisos.VisibleSi(Permisos.PuedeAccederGestionUsuarios());
 
         bool puedeEditar = Permisos.PuedeRegistrarResultados();
         btnIngresar.IsEnabled = puedeEditar;
@@ -57,13 +59,55 @@ public partial class RegistroResultados : Window
     {
         try
         {
-            dgResultados.ItemsSource = _logic.ObtenerResultados();
+            _todosResultados = _logic.ObtenerResultados();
+            dgResultados.ItemsSource = _todosResultados;
+            txtBuscar.Clear();
         }
         catch (Exception ex)
         {
             MessageBox.Show($"Error al cargar resultados:\n{ex.Message}", "Error",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
+    }
+
+    // ── Búsqueda ──────────────────────────────────────────────────────────────
+
+    private void BtnBuscar_Click(object sender, RoutedEventArgs e) => EjecutarBusqueda();
+
+    private void BtnVerTodos_Click(object sender, RoutedEventArgs e)
+    {
+        txtBuscar.Clear();
+        dgResultados.ItemsSource = _todosResultados;
+    }
+
+    private void TxtBuscar_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter) EjecutarBusqueda();
+        if (e.Key == Key.Escape) { txtBuscar.Clear(); dgResultados.ItemsSource = _todosResultados; }
+    }
+
+    private void EjecutarBusqueda()
+    {
+        var termino = txtBuscar.Text.Trim().ToLower();
+        if (string.IsNullOrEmpty(termino))
+        {
+            dgResultados.ItemsSource = _todosResultados;
+            return;
+        }
+
+        var filtrados = _todosResultados
+            .Where(r =>
+                (r.Inscripcion?.Participante?.NombreCompleto.ToLower().Contains(termino) ?? false) ||
+                (r.Evaluacion?.Titulo.ToLower().Contains(termino) ?? false) ||
+                r.NotaFinal.ToString().Contains(termino) ||
+                (r.Observaciones?.ToLower().Contains(termino) ?? false))
+            .ToList();
+
+        dgResultados.ItemsSource = filtrados;
+
+        if (filtrados.Count == 0)
+            MessageBox.Show("No se encontraron resultados que coincidan con la búsqueda.",
+                "Sin resultados", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     // ── Cambio de evaluación: recarga participantes inscritos ─────────────────
@@ -225,10 +269,11 @@ public partial class RegistroResultados : Window
 
     // ── Navegación ────────────────────────────────────────────────────────────
 
-    private void IrHome(object sender, MouseButtonEventArgs e) { new Home().Show(); this.Close(); }
-    private void IrGestionProgramas(object sender, MouseButtonEventArgs e) { new GestionProgramas().Show(); this.Close(); }
+    private void IrHome(object sender, MouseButtonEventArgs e)                { new Home().Show(); this.Close(); }
+    private void IrGestionProgramas(object sender, MouseButtonEventArgs e)    { new GestionProgramas().Show(); this.Close(); }
     private void IrGestionEvaluaciones(object sender, MouseButtonEventArgs e) { new GestionEvaluaciones().Show(); this.Close(); }
     private void IrRegistrarResultados(object sender, MouseButtonEventArgs e) { new RegistroResultados().Show(); this.Close(); }
-    private void IrReportes(object sender, MouseButtonEventArgs e) { new ReporteMetricas().Show(); this.Close(); }
-    private void IrParticipantes(object sender, MouseButtonEventArgs e) { new GestionParticipantes().Show(); this.Close(); }
+    private void IrReportes(object sender, MouseButtonEventArgs e)            { new ReporteMetricas().Show(); this.Close(); }
+    private void IrParticipantes(object sender, MouseButtonEventArgs e)       { new GestionParticipantes().Show(); this.Close(); }
+    private void IrGestionUsuarios(object sender, MouseButtonEventArgs e)     { new GestionUsuarios().Show(); this.Close(); }
 }

@@ -49,6 +49,12 @@ public static class Permisos
     /// <summary>Puede ver el link de Gestión de Evaluaciones en la barra de navegación.</summary>
     public static bool PuedeAccederGestionEvaluaciones()  => Rol is "Administrador" or "Coordinador";
 
+    /// <summary>Solo el Administrador puede gestionar usuarios del sistema.</summary>
+    public static bool PuedeGestionarUsuarios()           => Rol == "Administrador";
+
+    /// <summary>Solo el Administrador ve el link de Gestión de Usuarios en la navbar.</summary>
+    public static bool PuedeAccederGestionUsuarios()      => Rol == "Administrador";
+
     /// <summary>Puede ver métricas de programas (pestaña administrativa en reportes).</summary>
     public static bool PuedeVerMetricasPrograma() => Rol is "Administrador" or "Coordinador";
 
