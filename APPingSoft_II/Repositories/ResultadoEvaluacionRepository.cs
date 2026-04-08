@@ -60,8 +60,8 @@ public class ResultadoEvaluacionRepository
     public int Insertar(ResultadoEvaluacion r)
     {
         const string sql = @"INSERT INTO dbo.ResultadosEvaluacion (EvaluacionId, InscripcionId, NotaFinal, CalificadoEn, Observaciones)
-                             OUTPUT INSERTED.ResultadoId
-                             VALUES (@EvaluacionId, @InscripcionId, @NotaFinal, @CalificadoEn, @Observaciones)";
+                             VALUES (@EvaluacionId, @InscripcionId, @NotaFinal, @CalificadoEn, @Observaciones);
+                             SELECT CAST(SCOPE_IDENTITY() AS int);";
         using var conn = ConexionDB.ObtenerConexion();
         conn.Open();
         using var cmd = new SqlCommand(sql, conn);
