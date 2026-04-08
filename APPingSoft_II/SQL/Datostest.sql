@@ -25,6 +25,7 @@ BEGIN TRY
     FROM
     (
         VALUES
+            (N'Administrador', N'admins@appingsoft.local', N'Admin123*', N'Administrador', N'Activo'),
             (N'Andrea Vargas', N'andrea.vargas@appingsoft.local', N'Coord2026*', N'Coordinador', N'Activo'),
             (N'Jose Calvo', N'jose.calvo@appingsoft.local', N'Instructor2026*', N'Instructor', N'Activo'),
             (N'Paula Herrera', N'paula.herrera@appingsoft.local', N'Instructor2026*', N'Instructor', N'Activo')
@@ -350,6 +351,520 @@ BEGIN TRY
         WHERE rc.ResultadoId = r.ResultadoId
           AND rc.CriterioId = ce.CriterioId
     );
+
+    /* ==============================
+       DATOS MASIVOS ADICIONALES
+       (Sin agregar Usuarios)
+       ============================== */
+
+    ;WITH Areas AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Analisis de Requisitos', N'REQ'),
+                (2, N'Desarrollo Backend con .NET', N'NET'),
+                (3, N'Desarrollo Frontend Web', N'WEB'),
+                (4, N'Calidad y Pruebas de Software', N'QAS'),
+                (5, N'Arquitectura de Soluciones', N'ARQ'),
+                (6, N'Bases de Datos Relacionales', N'BDR'),
+                (7, N'Gestion de Proyectos Agiles', N'AGI'),
+                (8, N'Seguridad de Aplicaciones', N'SEG'),
+                (9, N'Integracion y APIs', N'API'),
+                (10, N'Experiencia de Usuario', N'UXD'),
+                (11, N'DevOps y Entrega Continua', N'DEV'),
+                (12, N'Analitica para Software', N'ANA')
+        ) v (AreaId, AreaNombre, Prefijo)
+    ),
+    Enfoques AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Fundamentos Aplicados', 40),
+                (2, N'Laboratorio Profesional', 48),
+                (3, N'Casos Empresariales', 56),
+                (4, N'Proyecto Guiado', 64),
+                (5, N'Especializacion Practica', 72)
+        ) v (EnfoqueId, EnfoqueNombre, DuracionHoras)
+    ),
+    CursosGenerados AS
+    (
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY a.AreaId, e.EnfoqueId) AS N,
+            a.AreaId,
+            a.AreaNombre,
+            a.Prefijo,
+            e.EnfoqueId,
+            e.EnfoqueNombre,
+            e.DuracionHoras,
+            CONCAT(a.Prefijo, RIGHT(CONCAT('00', e.EnfoqueId), 2), RIGHT(CONCAT('00', a.AreaId), 2)) AS CodigoCurso
+        FROM Areas a
+        CROSS JOIN Enfoques e
+    )
+    INSERT INTO dbo.Cursos (Codigo, Nombre, Descripcion, DuracionHoras, Estado)
+    SELECT
+        cg.CodigoCurso,
+        CONCAT(cg.AreaNombre, N' - ', cg.EnfoqueNombre),
+        CONCAT(N'Curso enfocado en ', LOWER(cg.AreaNombre), N' con un enfoque de ', LOWER(cg.EnfoqueNombre), N'.'),
+        cg.DuracionHoras,
+        N'Activo'
+    FROM CursosGenerados cg
+    WHERE NOT EXISTS
+    (
+        SELECT 1
+        FROM dbo.Cursos c
+        WHERE c.Codigo = cg.CodigoCurso
+    );
+
+    ;WITH Areas AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Analisis de Requisitos', N'REQ'),
+                (2, N'Desarrollo Backend con .NET', N'NET'),
+                (3, N'Desarrollo Frontend Web', N'WEB'),
+                (4, N'Calidad y Pruebas de Software', N'QAS'),
+                (5, N'Arquitectura de Soluciones', N'ARQ'),
+                (6, N'Bases de Datos Relacionales', N'BDR'),
+                (7, N'Gestion de Proyectos Agiles', N'AGI'),
+                (8, N'Seguridad de Aplicaciones', N'SEG'),
+                (9, N'Integracion y APIs', N'API'),
+                (10, N'Experiencia de Usuario', N'UXD'),
+                (11, N'DevOps y Entrega Continua', N'DEV'),
+                (12, N'Analitica para Software', N'ANA')
+        ) v (AreaId, AreaNombre, Prefijo)
+    ),
+    Enfoques AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Fundamentos Aplicados', 40),
+                (2, N'Laboratorio Profesional', 48),
+                (3, N'Casos Empresariales', 56),
+                (4, N'Proyecto Guiado', 64),
+                (5, N'Especializacion Practica', 72)
+        ) v (EnfoqueId, EnfoqueNombre, DuracionHoras)
+    ),
+    CursosGenerados AS
+    (
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY a.AreaId, e.EnfoqueId) AS N,
+            a.AreaNombre,
+            a.Prefijo,
+            e.EnfoqueId,
+            CONCAT(a.Prefijo, RIGHT(CONCAT('00', e.EnfoqueId), 2), RIGHT(CONCAT('00', a.AreaId), 2)) AS CodigoCurso
+        FROM Areas a
+        CROSS JOIN Enfoques e
+    )
+    INSERT INTO dbo.Programas (Nombre, FechaInicio, FechaFin, Estado, InstructorId, CursoId)
+    SELECT
+        CONCAT(N'Diplomado en ', cg.AreaNombre, N' Cohorte 2026-', RIGHT(CONCAT('000', cg.N), 3)),
+        DATEADD(DAY, cg.N * 3, CAST('2026-01-01' AS DATE)),
+        DATEADD(DAY, (cg.N * 3) + 140, CAST('2026-01-01' AS DATE)),
+        CASE WHEN cg.N % 5 = 0 THEN N'Finalizado' ELSE N'Activo' END,
+        i.InstructorId,
+        c.CursoId
+    FROM CursosGenerados cg
+    INNER JOIN dbo.Cursos c
+        ON c.Codigo = cg.CodigoCurso
+    INNER JOIN dbo.Instructores i
+        ON i.CorreoElectronico =
+           CASE
+               WHEN cg.N % 2 = 0 THEN N'jose.calvo@appingsoft.local'
+               ELSE N'paula.herrera@appingsoft.local'
+           END
+    WHERE NOT EXISTS
+    (
+        SELECT 1
+        FROM dbo.Programas p
+        WHERE p.Nombre = CONCAT(N'Diplomado en ', cg.AreaNombre, N' Cohorte 2026-', RIGHT(CONCAT('000', cg.N), 3))
+          AND p.FechaInicio = DATEADD(DAY, cg.N * 3, CAST('2026-01-01' AS DATE))
+    );
+
+    ;WITH Nombres AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (N'Alejandro'), (N'Andres'), (N'Antonio'), (N'Beatriz'), (N'Camila'),
+                (N'Carolina'), (N'Daniel'), (N'Diego'), (N'Esteban'), (N'Fernanda'),
+                (N'Gabriela'), (N'Irene'), (N'Javier'), (N'Jorge'), (N'Karla'),
+                (N'Laura'), (N'Maria'), (N'Natalia'), (N'Oscar'), (N'Paula')
+        ) v (Nombre)
+    ),
+    Apellidos AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (N'Alvarado'), (N'Arias'), (N'Calderon'), (N'Campos'), (N'Chaves'),
+                (N'Fernandez'), (N'Flores'), (N'Gonzalez'), (N'Herrera'), (N'Jimenez'),
+                (N'Lopez'), (N'Mendez'), (N'Morales'), (N'Navarro'), (N'Rojas')
+        ) v (Apellido)
+    ),
+    ParticipantesGenerados AS
+    (
+        SELECT TOP (120)
+            ROW_NUMBER() OVER (ORDER BY n.Nombre, a1.Apellido, a2.Apellido) AS N,
+            n.Nombre,
+            a1.Apellido AS Apellido1,
+            a2.Apellido AS Apellido2
+        FROM Nombres n
+        CROSS JOIN Apellidos a1
+        CROSS JOIN Apellidos a2
+        WHERE a1.Apellido <> a2.Apellido
+    )
+    INSERT INTO dbo.Participantes (NombreCompleto, CorreoElectronico, Telefono, Estado)
+    SELECT
+        CONCAT(pg.Nombre, N' ', pg.Apellido1, N' ', pg.Apellido2),
+        LOWER(CONCAT(N'is2.', REPLACE(pg.Nombre, N' ', N''), N'.', REPLACE(pg.Apellido1, N' ', N''), N'.', RIGHT(CONCAT('000', pg.N), 3), N'@gmail.com')),
+        CONCAT
+        (
+            CASE
+                WHEN pg.N % 3 = 0 THEN N'6'
+                WHEN pg.N % 3 = 1 THEN N'7'
+                ELSE N'8'
+            END,
+            RIGHT(CONCAT('000', 100 + ((pg.N * 37) % 900)), 3),
+            N'-',
+            RIGHT(CONCAT('0000', 1000 + ((pg.N * 83) % 9000)), 4)
+        ),
+        CASE WHEN pg.N % 14 = 0 THEN N'Inactivo' ELSE N'Activo' END
+    FROM ParticipantesGenerados pg
+    WHERE NOT EXISTS
+    (
+        SELECT 1
+        FROM dbo.Participantes p
+        WHERE p.CorreoElectronico = LOWER(CONCAT(N'is2.', REPLACE(pg.Nombre, N' ', N''), N'.', REPLACE(pg.Apellido1, N' ', N''), N'.', RIGHT(CONCAT('000', pg.N), 3), N'@gmail.com'))
+    );
+
+    ;WITH ParticipantesMasivos AS
+    (
+        SELECT
+            p.ParticipanteId,
+            ROW_NUMBER() OVER (ORDER BY p.ParticipanteId) AS N
+        FROM dbo.Participantes p
+        WHERE p.CorreoElectronico LIKE N'is2.%@gmail.com'
+    ),
+    ProgramasMasivos AS
+    (
+        SELECT
+            pr.ProgramaId,
+            pr.FechaInicio,
+            ROW_NUMBER() OVER (ORDER BY pr.ProgramaId) AS N
+        FROM dbo.Programas pr
+        WHERE pr.Nombre LIKE N'Diplomado en % Cohorte 2026-%'
+    )
+    INSERT INTO dbo.Inscripciones (ProgramaId, ParticipanteId, FechaInscripcion, Estado)
+    SELECT
+        pm.ProgramaId,
+        pa.ParticipanteId,
+        DATEADD(DAY, (pa.N - 1) % 12, pm.FechaInicio),
+        CASE WHEN pa.N % 11 = 0 THEN N'Finalizada' ELSE N'Activa' END
+    FROM ParticipantesMasivos pa
+    INNER JOIN ProgramasMasivos pm
+        ON pm.N = ((pa.N - 1) % 60) + 1
+    WHERE NOT EXISTS
+    (
+        SELECT 1
+        FROM dbo.Inscripciones i
+        WHERE i.ProgramaId = pm.ProgramaId
+          AND i.ParticipanteId = pa.ParticipanteId
+    );
+
+    ;WITH Areas AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Analisis de Requisitos', N'REQ'),
+                (2, N'Desarrollo Backend con .NET', N'NET'),
+                (3, N'Desarrollo Frontend Web', N'WEB'),
+                (4, N'Calidad y Pruebas de Software', N'QAS'),
+                (5, N'Arquitectura de Soluciones', N'ARQ'),
+                (6, N'Bases de Datos Relacionales', N'BDR'),
+                (7, N'Gestion de Proyectos Agiles', N'AGI'),
+                (8, N'Seguridad de Aplicaciones', N'SEG'),
+                (9, N'Integracion y APIs', N'API'),
+                (10, N'Experiencia de Usuario', N'UXD'),
+                (11, N'DevOps y Entrega Continua', N'DEV'),
+                (12, N'Analitica para Software', N'ANA')
+        ) v (AreaId, AreaNombre, Prefijo)
+    ),
+    Enfoques AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Fundamentos Aplicados', 40),
+                (2, N'Laboratorio Profesional', 48),
+                (3, N'Casos Empresariales', 56),
+                (4, N'Proyecto Guiado', 64),
+                (5, N'Especializacion Practica', 72)
+        ) v (EnfoqueId, EnfoqueNombre, DuracionHoras)
+    ),
+    CursosGenerados AS
+    (
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY a.AreaId, e.EnfoqueId) AS N,
+            a.AreaNombre,
+            e.EnfoqueId,
+            CONCAT(a.Prefijo, RIGHT(CONCAT('00', e.EnfoqueId), 2), RIGHT(CONCAT('00', a.AreaId), 2)) AS CodigoCurso
+        FROM Areas a
+        CROSS JOIN Enfoques e
+    )
+    INSERT INTO dbo.Evaluaciones
+    (
+        CursoId, Titulo, Tipo, Momento, FechaApertura, FechaCierre, PuntosMax, Estado
+    )
+    SELECT
+        c.CursoId,
+        CONCAT(N'Evaluacion Integral - ', cg.AreaNombre),
+        CASE WHEN cg.EnfoqueId IN (1, 2) THEN N'Formativa' ELSE N'Sumativa' END,
+        CONCAT(N'Modulo ', cg.EnfoqueId),
+        DATEADD(DAY, (cg.N * 3) + 20, CAST('2026-02-01' AS DATE)),
+        DATEADD(DAY, (cg.N * 3) + 23, CAST('2026-02-01' AS DATE)),
+        CAST(100.00 AS DECIMAL(8,2)),
+        CASE WHEN cg.EnfoqueId = 5 THEN N'Cerrado' ELSE N'Activo' END
+    FROM CursosGenerados cg
+    INNER JOIN dbo.Cursos c
+        ON c.Codigo = cg.CodigoCurso
+    WHERE NOT EXISTS
+    (
+        SELECT 1
+        FROM dbo.Evaluaciones e
+        WHERE e.CursoId = c.CursoId
+          AND e.Titulo = CONCAT(N'Evaluacion Integral - ', cg.AreaNombre)
+          AND e.FechaApertura = DATEADD(DAY, (cg.N * 3) + 20, CAST('2026-02-01' AS DATE))
+    );
+
+    ;WITH Areas AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Analisis de Requisitos', N'REQ'),
+                (2, N'Desarrollo Backend con .NET', N'NET'),
+                (3, N'Desarrollo Frontend Web', N'WEB'),
+                (4, N'Calidad y Pruebas de Software', N'QAS'),
+                (5, N'Arquitectura de Soluciones', N'ARQ'),
+                (6, N'Bases de Datos Relacionales', N'BDR'),
+                (7, N'Gestion de Proyectos Agiles', N'AGI'),
+                (8, N'Seguridad de Aplicaciones', N'SEG'),
+                (9, N'Integracion y APIs', N'API'),
+                (10, N'Experiencia de Usuario', N'UXD'),
+                (11, N'DevOps y Entrega Continua', N'DEV'),
+                (12, N'Analitica para Software', N'ANA')
+        ) v (AreaId, AreaNombre, Prefijo)
+    ),
+    Enfoques AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Fundamentos Aplicados', 40),
+                (2, N'Laboratorio Profesional', 48),
+                (3, N'Casos Empresariales', 56),
+                (4, N'Proyecto Guiado', 64),
+                (5, N'Especializacion Practica', 72)
+        ) v (EnfoqueId, EnfoqueNombre, DuracionHoras)
+    ),
+    CursosGenerados AS
+    (
+        SELECT
+            a.AreaNombre,
+            CONCAT(a.Prefijo, RIGHT(CONCAT('00', e.EnfoqueId), 2), RIGHT(CONCAT('00', a.AreaId), 2)) AS CodigoCurso
+        FROM Areas a
+        CROSS JOIN Enfoques e
+    )
+    INSERT INTO dbo.CriteriosEvaluacion (EvaluacionId, NombreCriterio, Ponderacion, PuntosMaxCriterio)
+    SELECT
+        e.EvaluacionId,
+        v.NombreCriterio,
+        v.Ponderacion,
+        v.PuntosMaxCriterio
+    FROM CursosGenerados cg
+    INNER JOIN dbo.Cursos c
+        ON c.Codigo = cg.CodigoCurso
+    INNER JOIN dbo.Evaluaciones e
+        ON e.CursoId = c.CursoId
+       AND e.Titulo = CONCAT(N'Evaluacion Integral - ', cg.AreaNombre)
+    CROSS APPLY
+    (
+        VALUES
+            (N'Comprension conceptual', CAST(50.00 AS DECIMAL(5,2)), CAST(50.00 AS DECIMAL(8,2))),
+            (N'Aplicacion en casos reales', CAST(50.00 AS DECIMAL(5,2)), CAST(50.00 AS DECIMAL(8,2)))
+    ) v (NombreCriterio, Ponderacion, PuntosMaxCriterio)
+    WHERE NOT EXISTS
+    (
+        SELECT 1
+        FROM dbo.CriteriosEvaluacion ce
+        WHERE ce.EvaluacionId = e.EvaluacionId
+          AND ce.NombreCriterio = v.NombreCriterio
+    );
+
+    ;WITH Areas AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Analisis de Requisitos', N'REQ'),
+                (2, N'Desarrollo Backend con .NET', N'NET'),
+                (3, N'Desarrollo Frontend Web', N'WEB'),
+                (4, N'Calidad y Pruebas de Software', N'QAS'),
+                (5, N'Arquitectura de Soluciones', N'ARQ'),
+                (6, N'Bases de Datos Relacionales', N'BDR'),
+                (7, N'Gestion de Proyectos Agiles', N'AGI'),
+                (8, N'Seguridad de Aplicaciones', N'SEG'),
+                (9, N'Integracion y APIs', N'API'),
+                (10, N'Experiencia de Usuario', N'UXD'),
+                (11, N'DevOps y Entrega Continua', N'DEV'),
+                (12, N'Analitica para Software', N'ANA')
+        ) v (AreaId, AreaNombre, Prefijo)
+    ),
+    Enfoques AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Fundamentos Aplicados', 40),
+                (2, N'Laboratorio Profesional', 48),
+                (3, N'Casos Empresariales', 56),
+                (4, N'Proyecto Guiado', 64),
+                (5, N'Especializacion Practica', 72)
+        ) v (EnfoqueId, EnfoqueNombre, DuracionHoras)
+    ),
+    CursosGenerados AS
+    (
+        SELECT
+            a.AreaNombre,
+            CONCAT(a.Prefijo, RIGHT(CONCAT('00', e.EnfoqueId), 2), RIGHT(CONCAT('00', a.AreaId), 2)) AS CodigoCurso
+        FROM Areas a
+        CROSS JOIN Enfoques e
+    )
+    INSERT INTO dbo.ResultadosEvaluacion (EvaluacionId, InscripcionId, NotaFinal, Observaciones)
+    SELECT
+        e.EvaluacionId,
+        i.InscripcionId,
+        n.NotaFinal,
+        CASE
+            WHEN n.NotaFinal >= 90 THEN N'Desempeno sobresaliente y dominio del contenido.'
+            WHEN n.NotaFinal >= 80 THEN N'Buen dominio del contenido y aplicacion adecuada.'
+            WHEN n.NotaFinal >= 70 THEN N'Resultado aceptable con oportunidades de mejora.'
+            ELSE N'Requiere refuerzo en conceptos y practica.'
+        END
+    FROM dbo.Inscripciones i
+    INNER JOIN dbo.Programas pr
+        ON pr.ProgramaId = i.ProgramaId
+    INNER JOIN dbo.Cursos c
+        ON c.CursoId = pr.CursoId
+    INNER JOIN CursosGenerados cg
+        ON cg.CodigoCurso = c.Codigo
+    INNER JOIN dbo.Evaluaciones e
+        ON e.CursoId = c.CursoId
+       AND e.Titulo = CONCAT(N'Evaluacion Integral - ', cg.AreaNombre)
+    CROSS APPLY
+    (
+        SELECT CAST(60.00 + (ABS(CHECKSUM(CONCAT(i.InscripcionId, N'-nota'))) % 41) AS DECIMAL(8,2)) AS NotaFinal
+    ) n
+    WHERE pr.Nombre LIKE N'Diplomado en % Cohorte 2026-%'
+      AND NOT EXISTS
+      (
+          SELECT 1
+          FROM dbo.ResultadosEvaluacion r
+          WHERE r.EvaluacionId = e.EvaluacionId
+            AND r.InscripcionId = i.InscripcionId
+      );
+
+    ;WITH Areas AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Analisis de Requisitos', N'REQ'),
+                (2, N'Desarrollo Backend con .NET', N'NET'),
+                (3, N'Desarrollo Frontend Web', N'WEB'),
+                (4, N'Calidad y Pruebas de Software', N'QAS'),
+                (5, N'Arquitectura de Soluciones', N'ARQ'),
+                (6, N'Bases de Datos Relacionales', N'BDR'),
+                (7, N'Gestion de Proyectos Agiles', N'AGI'),
+                (8, N'Seguridad de Aplicaciones', N'SEG'),
+                (9, N'Integracion y APIs', N'API'),
+                (10, N'Experiencia de Usuario', N'UXD'),
+                (11, N'DevOps y Entrega Continua', N'DEV'),
+                (12, N'Analitica para Software', N'ANA')
+        ) v (AreaId, AreaNombre, Prefijo)
+    ),
+    Enfoques AS
+    (
+        SELECT *
+        FROM
+        (
+            VALUES
+                (1, N'Fundamentos Aplicados', 40),
+                (2, N'Laboratorio Profesional', 48),
+                (3, N'Casos Empresariales', 56),
+                (4, N'Proyecto Guiado', 64),
+                (5, N'Especializacion Practica', 72)
+        ) v (EnfoqueId, EnfoqueNombre, DuracionHoras)
+    ),
+    CursosGenerados AS
+    (
+        SELECT
+            a.AreaNombre,
+            CONCAT(a.Prefijo, RIGHT(CONCAT('00', e.EnfoqueId), 2), RIGHT(CONCAT('00', a.AreaId), 2)) AS CodigoCurso
+        FROM Areas a
+        CROSS JOIN Enfoques e
+    )
+    INSERT INTO dbo.ResultadoCriterio (ResultadoId, CriterioId, PuntajeObtenido, Observacion)
+    SELECT
+        r.ResultadoId,
+        ce.CriterioId,
+        CAST
+        (
+            CASE
+                WHEN (r.NotaFinal * 0.50) > ce.PuntosMaxCriterio THEN ce.PuntosMaxCriterio
+                ELSE (r.NotaFinal * 0.50)
+            END
+            AS DECIMAL(8,2)
+        ),
+        CASE
+            WHEN ce.NombreCriterio = N'Comprension conceptual' THEN N'Demuestra comprension de conceptos clave.'
+            ELSE N'Aplica los conceptos en escenarios practicos.'
+        END
+    FROM dbo.ResultadosEvaluacion r
+    INNER JOIN dbo.Evaluaciones e
+        ON e.EvaluacionId = r.EvaluacionId
+    INNER JOIN dbo.Cursos c
+        ON c.CursoId = e.CursoId
+    INNER JOIN CursosGenerados cg
+        ON cg.CodigoCurso = c.Codigo
+    INNER JOIN dbo.CriteriosEvaluacion ce
+        ON ce.EvaluacionId = e.EvaluacionId
+    WHERE e.Titulo = CONCAT(N'Evaluacion Integral - ', cg.AreaNombre)
+      AND NOT EXISTS
+      (
+          SELECT 1
+          FROM dbo.ResultadoCriterio rc
+          WHERE rc.ResultadoId = r.ResultadoId
+            AND rc.CriterioId = ce.CriterioId
+      );
 
     COMMIT TRANSACTION;
 END TRY
