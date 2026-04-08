@@ -264,4 +264,5 @@ public partial class GestionUsuarios : Window
     private void IrReportes(object sender, MouseButtonEventArgs e)             { new ReporteMetricas().Show(); this.Close(); }
     private void IrParticipantes(object sender, MouseButtonEventArgs e)        { new GestionParticipantes().Show(); this.Close(); }
     private void IrGestionUsuarios(object sender, MouseButtonEventArgs e)      { new GestionUsuarios().Show(); this.Close(); }
+    private void BtnCerrarSesion_Click(object sender, MouseButtonEventArgs e)  { new Login().Show(); this.Close(); }
 }

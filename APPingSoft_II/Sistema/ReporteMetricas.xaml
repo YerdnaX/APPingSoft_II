@@ -55,6 +55,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
                     <Border Width="34" Height="34" Margin="0,0,8,0">
@@ -86,6 +87,12 @@
                     <TextBlock x:Name="navGestionUsuarios" Text="Gestion de Usuarios" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand" MouseLeftButtonDown="IrGestionUsuarios" FontWeight="Bold"/>
                 </StackPanel>
+
+                <Border Grid.Column="3" CornerRadius="6" Width="140" Height="42" Cursor="Hand"
+                        MouseLeftButtonDown="BtnCerrarSesion_Click">
+                    <TextBlock Text="Cerrar Sesión" Foreground="White" FontSize="13" FontWeight="SemiBold"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
             </Grid>
         </Border>
 
