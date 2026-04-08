@@ -42,10 +42,11 @@ public partial class GestionUsuarios : Window
 
     private void AplicarPermisosPorRol()
     {
-        navGestionProgramas.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
-        navParticipantes.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
-        navGestionEvaluaciones.Visibility = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
-        navGestionUsuarios.Visibility     = Permisos.VisibleSi(Permisos.PuedeAccederGestionUsuarios());
+        navGestionProgramas.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
+        navParticipantes.Visibility          = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
+        navGestionInscripciones.Visibility   = Permisos.VisibleSi(Permisos.PuedeAccederGestionInscripciones());
+        navGestionEvaluaciones.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
+        navGestionUsuarios.Visibility        = Permisos.VisibleSi(Permisos.PuedeAccederGestionUsuarios());
     }
 
     // ── Carga de tabla ────────────────────────────────────────────────────────
@@ -257,12 +258,13 @@ public partial class GestionUsuarios : Window
 
     // ── Navegación ────────────────────────────────────────────────────────────
 
-    private void IrHome(object sender, MouseButtonEventArgs e)                 { new Home().Show(); this.Close(); }
-    private void IrGestionProgramas(object sender, MouseButtonEventArgs e)     { new GestionProgramas().Show(); this.Close(); }
-    private void IrGestionEvaluaciones(object sender, MouseButtonEventArgs e)  { new GestionEvaluaciones().Show(); this.Close(); }
-    private void IrRegistrarResultados(object sender, MouseButtonEventArgs e)  { new RegistroResultados().Show(); this.Close(); }
-    private void IrReportes(object sender, MouseButtonEventArgs e)             { new ReporteMetricas().Show(); this.Close(); }
-    private void IrParticipantes(object sender, MouseButtonEventArgs e)        { new GestionParticipantes().Show(); this.Close(); }
-    private void IrGestionUsuarios(object sender, MouseButtonEventArgs e)      { new GestionUsuarios().Show(); this.Close(); }
-    private void BtnCerrarSesion_Click(object sender, MouseButtonEventArgs e)  { new Login().Show(); this.Close(); }
+    private void IrHome(object sender, MouseButtonEventArgs e)                    { new Home().Show(); this.Close(); }
+    private void IrGestionProgramas(object sender, MouseButtonEventArgs e)       { new GestionProgramas().Show(); this.Close(); }
+    private void IrParticipantes(object sender, MouseButtonEventArgs e)          { new GestionParticipantes().Show(); this.Close(); }
+    private void IrGestionInscripciones(object sender, MouseButtonEventArgs e)   { new GestionInscripciones().Show(); this.Close(); }
+    private void IrGestionEvaluaciones(object sender, MouseButtonEventArgs e)    { new GestionEvaluaciones().Show(); this.Close(); }
+    private void IrRegistrarResultados(object sender, MouseButtonEventArgs e)    { new RegistroResultados().Show(); this.Close(); }
+    private void IrReportes(object sender, MouseButtonEventArgs e)               { new ReporteMetricas().Show(); this.Close(); }
+    private void IrGestionUsuarios(object sender, MouseButtonEventArgs e)        { new GestionUsuarios().Show(); this.Close(); }
+    private void BtnCerrarSesion_Click(object sender, MouseButtonEventArgs e)    { new Login().Show(); this.Close(); }
 }

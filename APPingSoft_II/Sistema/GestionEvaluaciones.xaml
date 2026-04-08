@@ -49,6 +49,8 @@
                                MouseLeftButtonDown="IrGestionProgramas" FontWeight="Bold"/>
                     <TextBlock x:Name="navParticipantes" Text="Gestionar participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrParticipantes" FontWeight="Bold"/>
+                    <TextBlock x:Name="navGestionInscripciones" Text="Gestion de Inscripciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                               MouseLeftButtonDown="IrGestionInscripciones" FontWeight="Bold"/>
                     <TextBlock x:Name="navGestionEvaluaciones" Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionEvaluaciones" FontWeight="Bold"/>
                     <TextBlock Text="Registrar Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
