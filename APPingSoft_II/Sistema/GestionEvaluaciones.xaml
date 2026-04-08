@@ -5,59 +5,6 @@
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
 
-    <Window.Resources>
-        <Style x:Key="FormLabel" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#888888"/>
-            <Setter Property="Margin" Value="0,0,0,5"/>
-        </Style>
-        <Style x:Key="FormInput" TargetType="TextBox">
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Background" Value="#F0F0F0"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="10,0"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="#333333"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,0,0,18"/>
-        </Style>
-        <Style x:Key="FormCombo" TargetType="ComboBox">
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Background" Value="#F0F0F0"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="10,0"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="#333333"/>
-            <Setter Property="Margin" Value="0,0,0,18"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#3D4A6B"/>
-            <Setter Property="Margin" Value="0,10,0,10"/>
-        </Style>
-        <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Height" Value="42"/>
-            <Setter Property="Width" Value="140"/>
-            <Setter Property="Background" Value="#3D4A6B"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -115,7 +62,7 @@
         </Border>
 
         <!-- CONTENIDO -->
-        <Grid Grid.Row="1" Background="White" Margin="60,20">
+        <Grid Grid.Row="1" Background="#F5F7FF" Margin="60,20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -198,7 +145,7 @@
                             <Button x:Name="btnModificar" Content="Modificar" Style="{StaticResource ActionBtn}"
                                     Margin="0,0,0,10" Click="BtnModificar_Click" Background="#FF0041E5"/>
                             <Button x:Name="btnBorrar" Content="Borrar" Style="{StaticResource ActionBtn}"
-                                    Margin="0,0,0,10" Click="BtnBorrar_Click" Background="#FF0041E5"/>
+                                    Margin="0,0,0,10" Click="BtnBorrar_Click" Background="#DC2626"/>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

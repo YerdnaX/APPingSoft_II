@@ -43,7 +43,13 @@
         </Grid.RowDefinitions>
 
         <!-- NAVBAR -->
-        <Border Grid.Row="0" Background="#FF0138E2">
+        <Border Grid.Row="0">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0006E8" Offset="0.62"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
             <Grid Margin="20,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -84,7 +90,7 @@
         </Border>
 
         <!-- CONTENIDO -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Background="White">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Background="#F5F7FF">
             <Grid Margin="40,20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

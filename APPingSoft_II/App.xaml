@@ -1,9 +1,82 @@
-﻿<Application x:Class="APPingSoft_II.App"
+<Application x:Class="APPingSoft_II.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:APPingSoft_II"
              StartupUri="Sistema/Login.xaml">
     <Application.Resources>
-         
+
+        <!-- ═══════════════════════════════════════════════
+             FORMULARIO — etiquetas, campos, combos
+        ═══════════════════════════════════════════════ -->
+
+        <Style x:Key="FormLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#FF413E3E"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+
+        <Style x:Key="FormInput" TargetType="TextBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#C8D5F0"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,18"/>
+        </Style>
+
+        <Style x:Key="FormCombo" TargetType="ComboBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="#F5F7FF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="Margin" Value="0,0,0,18"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════
+             SECCIÓN — título de grupo dentro del formulario
+        ═══════════════════════════════════════════════ -->
+
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#FF413E3E"/>
+            <Setter Property="Margin" Value="0,12,0,10"/>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════
+             BOTONES DE ACCIÓN — base compartida
+             Colores se sobreescriben inline:
+               Ingresar / Modificar  →  Background="#0041E5"
+               Borrar                →  Background="#DC2626"
+               Limpiar               →  Background="#6B7280"
+        ═══════════════════════════════════════════════ -->
+
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Background" Value="#0041E5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>

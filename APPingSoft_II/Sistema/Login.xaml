@@ -73,11 +73,11 @@
 
                 <!-- Botón -->
                 <Button Content="Iniciar sesión" Height="42" FontSize="13" FontWeight="SemiBold"
-                        Background="#5C6BC0" Foreground="White" BorderThickness="0"
+                        Background="#0041E5" Foreground="White" BorderThickness="0"
                         Cursor="Hand" Click="BtnIniciarSesion_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="#5C6BC0" CornerRadius="6">
+                            <Border Background="#0041E5" CornerRadius="8">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
