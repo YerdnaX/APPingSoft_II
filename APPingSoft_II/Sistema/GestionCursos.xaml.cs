@@ -7,28 +7,25 @@ using System.Windows.Input;
 
 namespace APPingSoft_II.Sistema;
 
-public partial class GestionUsuarios : Window
+public partial class GestionCursos : Window
 {
-    private readonly GestionUsuariosLogic _logic = new();
-    private int _usuarioSeleccionadoId = 0;
-    private string _contrasenaActual = string.Empty;   // guarda hash/texto original al modificar
-    private List<Usuario> _todosUsuarios = new();
+    private readonly GestionCursosLogic _logic = new();
+    private int _cursoSeleccionadoId = 0;
+    private List<Curso> _todosCursos = new();
 
-    public GestionUsuarios()
+    public GestionCursos()
     {
         InitializeComponent();
-        Loaded += GestionUsuarios_Loaded;
+        Loaded += GestionCursos_Loaded;
     }
 
-    private void GestionUsuarios_Loaded(object sender, RoutedEventArgs e)
+    private void GestionCursos_Loaded(object sender, RoutedEventArgs e)
     {
-        // Si por alguna razón un rol no-Admin llega aquí, cerrar inmediatamente
-        if (!Permisos.PuedeAccederGestionUsuarios())
+        if (!Permisos.PuedeAccederGestionCursos())
         {
-            MessageBox.Show("Acceso denegado. Solo los Administradores pueden gestionar usuarios.",
+            MessageBox.Show("Acceso denegado. No tiene permisos para gestionar cursos.",
                 "Sin permisos", MessageBoxButton.OK, MessageBoxImage.Stop);
-            var home = new Home();
-            home.Show();
+            new Home().Show();
             this.Close();
             return;
         }
@@ -38,16 +35,21 @@ public partial class GestionUsuarios : Window
         LimpiarFormulario();
     }
 
-    // ── Permisos de navbar ────────────────────────────────────────────────────
+    // ── Permisos ──────────────────────────────────────────────────────────────
 
     private void AplicarPermisosPorRol()
     {
-        navGestionProgramas.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
-        navGestionCursos.Visibility          = Permisos.VisibleSi(Permisos.PuedeAccederGestionCursos());
-        navParticipantes.Visibility          = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
-        navGestionInscripciones.Visibility   = Permisos.VisibleSi(Permisos.PuedeAccederGestionInscripciones());
-        navGestionEvaluaciones.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
-        navGestionUsuarios.Visibility        = Permisos.VisibleSi(Permisos.PuedeAccederGestionUsuarios());
+        navGestionProgramas.Visibility     = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
+        navGestionCursos.Visibility        = Permisos.VisibleSi(Permisos.PuedeAccederGestionCursos());
+        navParticipantes.Visibility        = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
+        navGestionInscripciones.Visibility = Permisos.VisibleSi(Permisos.PuedeAccederGestionInscripciones());
+        navGestionEvaluaciones.Visibility  = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
+        navGestionUsuarios.Visibility      = Permisos.VisibleSi(Permisos.PuedeAccederGestionUsuarios());
+
+        bool puedeEditar = Permisos.PuedeGestionarCursos();
+        btnIngresar.IsEnabled = puedeEditar;
+        btnModificar.IsEnabled = puedeEditar;
+        btnBorrar.IsEnabled    = puedeEditar;
     }
 
     // ── Carga de tabla ────────────────────────────────────────────────────────
@@ -56,13 +58,13 @@ public partial class GestionUsuarios : Window
     {
         try
         {
-            _todosUsuarios = _logic.ObtenerTodos();
-            dgUsuarios.ItemsSource = _todosUsuarios;
+            _todosCursos = _logic.ObtenerTodos();
+            dgCursos.ItemsSource = _todosCursos;
             txtBuscar.Clear();
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Error al cargar usuarios:\n{ex.Message}", "Error",
+            MessageBox.Show($"Error al cargar cursos:\n{ex.Message}", "Error",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
@@ -74,29 +76,37 @@ public partial class GestionUsuarios : Window
     private void BtnVerTodos_Click(object sender, RoutedEventArgs e)
     {
         txtBuscar.Clear();
-        dgUsuarios.ItemsSource = _todosUsuarios;
+        dgCursos.ItemsSource = _todosCursos;
     }
 
     private void TxtBuscar_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter) EjecutarBusqueda();
-        if (e.Key == Key.Escape) { txtBuscar.Clear(); dgUsuarios.ItemsSource = _todosUsuarios; }
+        if (e.Key == Key.Escape) { txtBuscar.Clear(); dgCursos.ItemsSource = _todosCursos; }
     }
 
     private void EjecutarBusqueda()
     {
-        var termino = txtBuscar.Text.Trim();
+        var termino = txtBuscar.Text.Trim().ToLower();
         if (string.IsNullOrEmpty(termino))
         {
-            dgUsuarios.ItemsSource = _todosUsuarios;
+            dgCursos.ItemsSource = _todosCursos;
             return;
         }
 
-        var filtrados = _logic.Buscar(termino);
-        dgUsuarios.ItemsSource = filtrados;
+        var filtrados = _todosCursos
+            .Where(c =>
+                c.Codigo.ToLower().Contains(termino) ||
+                c.Nombre.ToLower().Contains(termino) ||
+                (c.Descripcion?.ToLower().Contains(termino) ?? false) ||
+                c.Estado.ToLower().Contains(termino) ||
+                c.DuracionHoras.ToString().Contains(termino))
+            .ToList();
+
+        dgCursos.ItemsSource = filtrados;
 
         if (filtrados.Count == 0)
-            MessageBox.Show("No se encontraron usuarios que coincidan con la búsqueda.",
+            MessageBox.Show("No se encontraron cursos que coincidan con la búsqueda.",
                 "Sin resultados", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
@@ -104,12 +114,12 @@ public partial class GestionUsuarios : Window
 
     private void BtnIngresar_Click(object sender, RoutedEventArgs e)
     {
-        var usuario = LeerFormulario(esNuevo: true);
-        if (usuario == null) return;
+        var curso = LeerFormulario();
+        if (curso == null) return;
 
         try
         {
-            var (ok, mensaje) = _logic.Insertar(usuario);
+            var (ok, mensaje) = _logic.Insertar(curso);
             MostrarMensaje(ok, mensaje);
             if (ok) { CargarTabla(); LimpiarFormulario(); }
         }
@@ -121,26 +131,20 @@ public partial class GestionUsuarios : Window
 
     private void BtnModificar_Click(object sender, RoutedEventArgs e)
     {
-        if (_usuarioSeleccionadoId <= 0)
+        if (_cursoSeleccionadoId <= 0)
         {
-            MessageBox.Show("Seleccione un usuario de la tabla para modificar.", "Aviso",
+            MessageBox.Show("Seleccione un curso de la tabla para modificar.", "Aviso",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
-        var usuario = LeerFormulario(esNuevo: false);
-        if (usuario == null) return;
-        usuario.UsuarioId = _usuarioSeleccionadoId;
-
-        // Si no se ingresó contraseña nueva, conservar la contraseña actual
-        if (string.IsNullOrWhiteSpace(pwdContrasena.Password))
-            usuario.Contrasena = _contrasenaActual;
-        else
-            usuario.Contrasena = pwdContrasena.Password;
+        var curso = LeerFormulario();
+        if (curso == null) return;
+        curso.CursoId = _cursoSeleccionadoId;
 
         try
         {
-            var (ok, mensaje) = _logic.Actualizar(usuario);
+            var (ok, mensaje) = _logic.Actualizar(curso);
             MostrarMensaje(ok, mensaje);
             if (ok) { CargarTabla(); LimpiarFormulario(); }
         }
@@ -152,20 +156,21 @@ public partial class GestionUsuarios : Window
 
     private void BtnBorrar_Click(object sender, RoutedEventArgs e)
     {
-        if (_usuarioSeleccionadoId <= 0)
+        if (_cursoSeleccionadoId <= 0)
         {
-            MessageBox.Show("Seleccione un usuario de la tabla para desactivar.", "Aviso",
+            MessageBox.Show("Seleccione un curso de la tabla para desactivar.", "Aviso",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
-        var result = MessageBox.Show("¿Desea desactivar el usuario seleccionado?", "Confirmar",
-            MessageBoxButton.YesNo, MessageBoxImage.Question);
+        var result = MessageBox.Show(
+            "¿Desea desactivar el curso seleccionado?\nNo se puede desactivar si tiene programas activos asociados.",
+            "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (result != MessageBoxResult.Yes) return;
 
         try
         {
-            var (ok, mensaje) = _logic.Desactivar(_usuarioSeleccionadoId);
+            var (ok, mensaje) = _logic.Desactivar(_cursoSeleccionadoId);
             MostrarMensaje(ok, mensaje);
             if (ok) { CargarTabla(); LimpiarFormulario(); }
         }
@@ -179,74 +184,67 @@ public partial class GestionUsuarios : Window
 
     // ── Selección en tabla ────────────────────────────────────────────────────
 
-    private void DgUsuarios_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void DgCursos_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (dgUsuarios.SelectedItem is not Usuario u) return;
+        if (dgCursos.SelectedItem is not Curso c) return;
 
-        _usuarioSeleccionadoId = u.UsuarioId;
-        _contrasenaActual = u.Contrasena;
+        _cursoSeleccionadoId = c.CursoId;
+        txtCodigo.Text       = c.Codigo;
+        txtNombre.Text       = c.Nombre;
+        txtDescripcion.Text  = c.Descripcion ?? string.Empty;
+        txtDuracion.Text     = c.DuracionHoras.ToString();
 
-        txtNombre.Text  = u.NombreCompleto;
-        txtCorreo.Text  = u.CorreoElectronico;
-        pwdContrasena.Password = string.Empty; // nunca mostrar la contraseña
-
-        foreach (ComboBoxItem item in cmbRol.Items)
-        {
-            if (item.Content?.ToString() == u.Rol) { cmbRol.SelectedItem = item; break; }
-        }
         foreach (ComboBoxItem item in cmbEstado.Items)
         {
-            if (item.Content?.ToString() == u.Estado) { cmbEstado.SelectedItem = item; break; }
+            if (item.Content?.ToString() == c.Estado) { cmbEstado.SelectedItem = item; break; }
         }
     }
 
-    // ── Helpers de formulario ─────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private Usuario? LeerFormulario(bool esNuevo)
+    private Curso? LeerFormulario()
     {
+        if (string.IsNullOrWhiteSpace(txtCodigo.Text))
+        {
+            MessageBox.Show("El código del curso es obligatorio.", "Validación",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            txtCodigo.Focus(); return null;
+        }
         if (string.IsNullOrWhiteSpace(txtNombre.Text))
         {
-            MessageBox.Show("El nombre completo es obligatorio.", "Validación",
+            MessageBox.Show("El nombre del curso es obligatorio.", "Validación",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             txtNombre.Focus(); return null;
         }
-        if (string.IsNullOrWhiteSpace(txtCorreo.Text))
+        if (!int.TryParse(txtDuracion.Text.Trim(), out int horas) || horas <= 0)
         {
-            MessageBox.Show("El correo electrónico es obligatorio.", "Validación",
+            MessageBox.Show("La duración en horas debe ser un número entero mayor a cero.", "Validación",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
-            txtCorreo.Focus(); return null;
-        }
-        if (esNuevo && string.IsNullOrWhiteSpace(pwdContrasena.Password))
-        {
-            MessageBox.Show("La contraseña es obligatoria para un nuevo usuario.", "Validación",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            pwdContrasena.Focus(); return null;
+            txtDuracion.Focus(); return null;
         }
 
-        var rol    = (cmbRol.SelectedItem    as ComboBoxItem)?.Content?.ToString() ?? "Instructor";
         var estado = (cmbEstado.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Activo";
 
-        return new Usuario
+        return new Curso
         {
-            NombreCompleto    = txtNombre.Text.Trim(),
-            CorreoElectronico = txtCorreo.Text.Trim(),
-            Contrasena        = pwdContrasena.Password,   // service maneja el caso vacío en modify
-            Rol               = rol,
-            Estado            = estado
+            Codigo        = txtCodigo.Text.Trim().ToUpper(),
+            Nombre        = txtNombre.Text.Trim(),
+            Descripcion   = string.IsNullOrWhiteSpace(txtDescripcion.Text) ? null : txtDescripcion.Text.Trim(),
+            DuracionHoras = horas,
+            Estado        = estado
         };
     }
 
     private void LimpiarFormulario()
     {
+        txtCodigo.Clear();
         txtNombre.Clear();
-        txtCorreo.Clear();
-        pwdContrasena.Password = string.Empty;
-        cmbRol.SelectedIndex    = 0;
-        cmbEstado.SelectedIndex = 0;
-        dgUsuarios.SelectedItem = null;
-        _usuarioSeleccionadoId  = 0;
-        _contrasenaActual       = string.Empty;
-        txtNombre.Focus();
+        txtDescripcion.Clear();
+        txtDuracion.Clear();
+        cmbEstado.SelectedIndex    = 0;
+        dgCursos.SelectedItem      = null;
+        _cursoSeleccionadoId       = 0;
+        txtCodigo.Focus();
     }
 
     private static void MostrarMensaje(bool ok, string mensaje)

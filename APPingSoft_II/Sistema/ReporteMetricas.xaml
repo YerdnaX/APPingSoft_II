@@ -74,19 +74,21 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
                     <TextBlock Text="Home" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrHome" FontWeight="Bold"/>
-                    <TextBlock x:Name="navGestionProgramas" Text="Gestion de programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navGestionProgramas" Text="Programas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionProgramas" FontWeight="Bold"/>
-                    <TextBlock x:Name="navParticipantes" Text="Gestionar participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navGestionCursos" Text="Cursos" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                               MouseLeftButtonDown="IrGestionCursos" FontWeight="Bold"/>
+                    <TextBlock x:Name="navParticipantes" Text="Participantes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrParticipantes" FontWeight="Bold"/>
-                    <TextBlock x:Name="navGestionInscripciones" Text="Gestion de Inscripciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navGestionInscripciones" Text="Inscripciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionInscripciones" FontWeight="Bold"/>
-                    <TextBlock x:Name="navGestionEvaluaciones" Text="Gestion de Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock x:Name="navGestionEvaluaciones" Text="Evaluaciones" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrGestionEvaluaciones" FontWeight="Bold"/>
-                    <TextBlock Text="Registrar Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock Text="Resultados" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrRegistrarResultados" FontWeight="Bold"/>
-                    <TextBlock Text="Reportes y Metricas" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
+                    <TextBlock Text="Reportes" FontSize="12" Foreground="White" Margin="10,0" Cursor="Hand"
                                MouseLeftButtonDown="IrReportes" FontWeight="Bold"/>
-                    <TextBlock x:Name="navGestionUsuarios" Text="Gestion de Usuarios" FontSize="12" Foreground="White"
+                    <TextBlock x:Name="navGestionUsuarios" Text="Usuarios" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand" MouseLeftButtonDown="IrGestionUsuarios" FontWeight="Bold"/>
                 </StackPanel>
 

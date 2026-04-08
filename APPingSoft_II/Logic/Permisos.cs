@@ -49,6 +49,12 @@ public static class Permisos
     /// <summary>Puede ver el link de Gestión de Evaluaciones en la barra de navegación.</summary>
     public static bool PuedeAccederGestionEvaluaciones()  => Rol is "Administrador" or "Coordinador";
 
+    /// <summary>Puede crear, modificar y desactivar Cursos.</summary>
+    public static bool PuedeGestionarCursos()              => Rol is "Administrador" or "Coordinador";
+
+    /// <summary>Puede ver el link de Gestión de Cursos en la barra de navegación.</summary>
+    public static bool PuedeAccederGestionCursos()         => Rol is "Administrador" or "Coordinador";
+
     /// <summary>Puede crear, modificar y retirar Inscripciones.</summary>
     public static bool PuedeGestionarInscripciones()      => Rol is "Administrador" or "Coordinador";
 

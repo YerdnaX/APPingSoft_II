@@ -31,6 +31,7 @@ public partial class GestionEvaluaciones : Window
     private void AplicarPermisosPorRol()
     {
         navGestionProgramas.Visibility       = Permisos.VisibleSi(Permisos.PuedeAccederGestionProgramas());
+        navGestionCursos.Visibility          = Permisos.VisibleSi(Permisos.PuedeAccederGestionCursos());
         navParticipantes.Visibility          = Permisos.VisibleSi(Permisos.PuedeAccederGestionParticipantes());
         navGestionInscripciones.Visibility   = Permisos.VisibleSi(Permisos.PuedeAccederGestionInscripciones());
         navGestionEvaluaciones.Visibility    = Permisos.VisibleSi(Permisos.PuedeAccederGestionEvaluaciones());
@@ -361,6 +362,7 @@ public partial class GestionEvaluaciones : Window
 
     private void IrHome(object sender, MouseButtonEventArgs e)                    { new Home().Show(); this.Close(); }
     private void IrGestionProgramas(object sender, MouseButtonEventArgs e)       { new GestionProgramas().Show(); this.Close(); }
+    private void IrGestionCursos(object sender, MouseButtonEventArgs e)          { new GestionCursos().Show(); this.Close(); }
     private void IrParticipantes(object sender, MouseButtonEventArgs e)          { new GestionParticipantes().Show(); this.Close(); }
     private void IrGestionInscripciones(object sender, MouseButtonEventArgs e)   { new GestionInscripciones().Show(); this.Close(); }
     private void IrGestionEvaluaciones(object sender, MouseButtonEventArgs e)    { new GestionEvaluaciones().Show(); this.Close(); }

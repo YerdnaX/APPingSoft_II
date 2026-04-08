@@ -1,10 +1,9 @@
-<Window x:Class="APPingSoft_II.Sistema.GestionUsuarios"
+<Window x:Class="APPingSoft_II.Sistema.GestionCursos"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Gestión de Usuarios" Height="850" Width="1280"
+        Title="Gestión de Cursos" Height="850" Width="1280"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
-
 
     <Grid>
         <Grid.RowDefinitions>
@@ -16,8 +15,8 @@
         <Border Grid.Row="0">
             <Border.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0006E8" Offset="0.62"/>
                     <GradientStop Color="White" Offset="1"/>
-                    <GradientStop Color="#FF0006E8" Offset="0.629"/>
                 </LinearGradientBrush>
             </Border.Background>
             <Grid Margin="20,0">
@@ -61,7 +60,6 @@
                     <TextBlock x:Name="navGestionUsuarios" Text="Usuarios" FontSize="12" Foreground="White"
                                Margin="10,0" Cursor="Hand" MouseLeftButtonDown="IrGestionUsuarios" FontWeight="Bold"/>
                 </StackPanel>
-
                 <Border Grid.Column="3" CornerRadius="6" Width="140" Height="42" Cursor="Hand"
                         MouseLeftButtonDown="BtnCerrarSesion_Click">
                     <TextBlock Text="Cerrar Sesión" Foreground="White" FontSize="13" FontWeight="SemiBold"
@@ -77,7 +75,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Gestion de Usuarios" FontSize="28" FontWeight="Bold"
+            <TextBlock Grid.Row="0" Text="Gestion de Cursos" FontSize="28" FontWeight="Bold"
                        Foreground="#FF413E3E" HorizontalAlignment="Center" Margin="0,0,0,30"/>
 
             <Grid Grid.Row="1">
@@ -89,47 +87,41 @@
                 <!-- FORMULARIO -->
                 <StackPanel Grid.Column="0" Margin="0,0,60,0">
 
-                    <TextBlock Text="NOMBRE COMPLETO" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
+                    <TextBlock Text="CÓDIGO" Style="{StaticResource FormLabel}"/>
+                    <TextBox x:Name="txtCodigo" Style="{StaticResource FormInput}"/>
+
+                    <TextBlock Text="NOMBRE DEL CURSO" Style="{StaticResource FormLabel}"/>
                     <TextBox x:Name="txtNombre" Style="{StaticResource FormInput}"/>
 
-                    <TextBlock Text="CORREO ELECTRÓNICO" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
-                    <TextBox x:Name="txtCorreo" Style="{StaticResource FormInput}"/>
+                    <TextBlock Text="DESCRIPCIÓN" Style="{StaticResource FormLabel}"/>
+                    <TextBox x:Name="txtDescripcion" Style="{StaticResource FormInput}"
+                             Height="70" VerticalContentAlignment="Top" Padding="10,8"
+                             TextWrapping="Wrap" AcceptsReturn="True"/>
 
-                    <TextBlock Text="CONTRASEÑA" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
-                    <PasswordBox x:Name="pwdContrasena" Height="40" Background="#F0F0F0"
-                                 BorderThickness="0" FontSize="13" Padding="10,0"
-                                 VerticalContentAlignment="Center" Margin="0,0,0,4"/>
-                    <TextBlock Text="Dejar vacío para conservar contraseña al modificar"
-                               FontSize="10" Foreground="#AAAAAA" Margin="0,0,0,14"/>
+                    <TextBlock Text="DURACIÓN (HORAS)" Style="{StaticResource FormLabel}"/>
+                    <TextBox x:Name="txtDuracion" Style="{StaticResource FormInput}"/>
 
-                    <TextBlock Text="ROL" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
-                    <ComboBox x:Name="cmbRol" Style="{StaticResource FormCombo}">
-                        <ComboBoxItem Content="Administrador"/>
-                        <ComboBoxItem Content="Coordinador"/>
-                        <ComboBoxItem Content="Instructor"/>
-                    </ComboBox>
-
-                    <TextBlock Text="ESTADO" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
+                    <TextBlock Text="ESTADO" Style="{StaticResource FormLabel}"/>
                     <ComboBox x:Name="cmbEstado" Style="{StaticResource FormCombo}">
                         <ComboBoxItem Content="Activo"/>
                         <ComboBoxItem Content="Inactivo"/>
                     </ComboBox>
 
-                    <!-- Botones de acción -->
+                    <!-- Botones -->
                     <StackPanel Orientation="Vertical" Margin="0,20,0,0">
                         <Button x:Name="btnIngresar" Content="Ingresar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10" Click="BtnIngresar_Click" Background="#FF0041E5"/>
+                                Margin="0,0,0,10" Click="BtnIngresar_Click"/>
                         <Button x:Name="btnModificar" Content="Modificar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10" Click="BtnModificar_Click" Background="#FF0041E5"/>
-                        <Button x:Name="btnBorrar" Content="Borrar" Style="{StaticResource ActionBtn}"
+                                Margin="0,0,0,10" Click="BtnModificar_Click"/>
+                        <Button x:Name="btnBorrar" Content="Desactivar" Style="{StaticResource ActionBtn}"
                                 Margin="0,0,0,10" Click="BtnBorrar_Click" Background="#DC2626"/>
                         <Button x:Name="btnLimpiar" Content="Limpiar" Style="{StaticResource ActionBtn}"
-                                Margin="0,0,0,10" Background="#888888" Click="BtnLimpiar_Click"/>
+                                Margin="0,0,0,10" Background="#6B7280" Click="BtnLimpiar_Click"/>
                     </StackPanel>
 
                 </StackPanel>
 
-                <!-- LADO DERECHO: búsqueda + tabla -->
+                <!-- TABLA CON BÚSQUEDA -->
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -175,8 +167,8 @@
                         </Button>
                     </Grid>
 
-                    <!-- Tabla -->
-                    <DataGrid x:Name="dgUsuarios" Grid.Row="1" AutoGenerateColumns="False"
+                    <!-- DataGrid -->
+                    <DataGrid x:Name="dgCursos" Grid.Row="1" AutoGenerateColumns="False"
                               CanUserAddRows="False" IsReadOnly="True"
                               BorderBrush="#E2E8F0" BorderThickness="1"
                               GridLinesVisibility="None"
@@ -186,7 +178,7 @@
                               HeadersVisibility="All"
                               RowHeight="38"
                               ColumnHeaderHeight="44"
-                              SelectionChanged="DgUsuarios_SelectionChanged">
+                              SelectionChanged="DgCursos_SelectionChanged">
 
                         <DataGrid.Resources>
                             <Style TargetType="DataGridRow">
@@ -234,9 +226,9 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="DataGridColumnHeader">
                                             <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Padding="{TemplateBinding Padding}">
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Padding="{TemplateBinding Padding}">
                                                 <ContentPresenter VerticalAlignment="Center"/>
                                             </Border>
                                         </ControlTemplate>
@@ -246,16 +238,30 @@
                         </DataGrid.ColumnHeaderStyle>
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID"               Binding="{Binding UsuarioId}"                                Width="60"/>
-                            <DataGridTextColumn Header="Nombre Completo"  Binding="{Binding NombreCompleto}"                          Width="*"/>
-                            <DataGridTextColumn Header="Correo"           Binding="{Binding CorreoElectronico}"                       Width="*"/>
-                            <DataGridTextColumn Header="Rol"              Binding="{Binding Rol}"                                     Width="120"/>
-                            <DataGridTextColumn Header="Estado"           Binding="{Binding Estado}"                                  Width="90"/>
-                            <DataGridTextColumn Header="Fecha Registro"   Binding="{Binding FechaCreacion, StringFormat=dd/MM/yyyy}"  Width="120"/>
+                            <DataGridTextColumn Header="ID"
+                                                Binding="{Binding CursoId}"
+                                                Width="60"/>
+                            <DataGridTextColumn Header="Código"
+                                                Binding="{Binding Codigo}"
+                                                Width="100"/>
+                            <DataGridTextColumn Header="Nombre"
+                                                Binding="{Binding Nombre}"
+                                                Width="*"/>
+                            <DataGridTextColumn Header="Descripción"
+                                                Binding="{Binding Descripcion}"
+                                                Width="*"/>
+                            <DataGridTextColumn Header="Horas"
+                                                Binding="{Binding DuracionHoras}"
+                                                Width="70"/>
+                            <DataGridTextColumn Header="Estado"
+                                                Binding="{Binding Estado}"
+                                                Width="90"/>
+                            <DataGridTextColumn Header="Fecha Creación"
+                                                Binding="{Binding FechaCreacion, StringFormat=dd/MM/yyyy}"
+                                                Width="120"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
-
             </Grid>
         </Grid>
     </Grid>

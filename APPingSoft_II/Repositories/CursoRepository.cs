@@ -6,6 +6,7 @@ namespace APPingSoft_II.Repositories;
 
 public class CursoRepository
 {
+    /// <summary>Solo cursos activos — usado por combos de otras ventanas.</summary>
     public List<Curso> ObtenerTodos()
     {
         var lista = new List<Curso>();
@@ -17,6 +18,41 @@ public class CursoRepository
         while (reader.Read())
             lista.Add(MapearCurso(reader));
         return lista;
+    }
+
+    /// <summary>Todos los cursos (activos e inactivos) — usado por Gestión de Cursos.</summary>
+    public List<Curso> ObtenerTodosParaGestion()
+    {
+        var lista = new List<Curso>();
+        const string sql = "SELECT CursoId, Codigo, Nombre, Descripcion, DuracionHoras, Estado, FechaCreacion FROM dbo.Cursos ORDER BY Nombre";
+        using var conn = ConexionDB.ObtenerConexion();
+        conn.Open();
+        using var cmd = new SqlCommand(sql, conn);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+            lista.Add(MapearCurso(reader));
+        return lista;
+    }
+
+    public bool ExisteCodigo(string codigo, int excluirId = 0)
+    {
+        const string sql = "SELECT COUNT(1) FROM dbo.Cursos WHERE Codigo = @Codigo AND CursoId <> @ExcluirId";
+        using var conn = ConexionDB.ObtenerConexion();
+        conn.Open();
+        using var cmd = new SqlCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@Codigo", codigo);
+        cmd.Parameters.AddWithValue("@ExcluirId", excluirId);
+        return (int)cmd.ExecuteScalar()! > 0;
+    }
+
+    public bool TieneProgramasAsociados(int cursoId)
+    {
+        const string sql = "SELECT COUNT(1) FROM dbo.Programas WHERE CursoId = @Id AND Estado <> N'Finalizado'";
+        using var conn = ConexionDB.ObtenerConexion();
+        conn.Open();
+        using var cmd = new SqlCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@Id", cursoId);
+        return (int)cmd.ExecuteScalar()! > 0;
     }
 
     public Curso? ObtenerPorId(int id)
