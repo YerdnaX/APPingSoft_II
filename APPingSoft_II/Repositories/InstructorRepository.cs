@@ -10,7 +10,7 @@ public class InstructorRepository
     {
         var lista = new List<Instructor>();
         const string sql = @"SELECT InstructorId, UsuarioId, NombreCompleto, CorreoElectronico, Especialidad, Estado, FechaRegistro
-                             FROM dbo.Instructores ORDER BY NombreCompleto";
+                             FROM dbo.Instructores WHERE Estado = N'Activo' ORDER BY NombreCompleto";
         using var conn = ConexionDB.ObtenerConexion();
         conn.Open();
 
