@@ -10,9 +10,12 @@ public class InstructorRepository
     {
         var lista = new List<Instructor>();
         const string sql = @"SELECT InstructorId, UsuarioId, NombreCompleto, CorreoElectronico, Especialidad, Estado, FechaRegistro
-                             FROM dbo.Instructores WHERE Estado = N'Activo' ORDER BY NombreCompleto";
+                             FROM dbo.Instructores ORDER BY NombreCompleto";
         using var conn = ConexionDB.ObtenerConexion();
         conn.Open();
+
+        SincronizarDesdeUsuarios(conn);
+
         using var cmd = new SqlCommand(sql, conn);
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
@@ -83,4 +86,32 @@ public class InstructorRepository
         Estado = r.GetString(5),
         FechaRegistro = r.GetDateTime(6)
     };
+
+    private static void SincronizarDesdeUsuarios(SqlConnection conn)
+    {
+        const string sqlInsertarFaltantes = @"
+            INSERT INTO dbo.Instructores (UsuarioId, NombreCompleto, CorreoElectronico, Especialidad, Estado)
+            SELECT u.UsuarioId, u.NombreCompleto, u.CorreoElectronico, NULL, u.Estado
+            FROM dbo.Usuarios u
+            LEFT JOIN dbo.Instructores i
+                ON i.UsuarioId = u.UsuarioId OR i.CorreoElectronico = u.CorreoElectronico
+            WHERE u.Rol = N'Instructor'
+              AND i.InstructorId IS NULL;";
+
+        const string sqlActualizarVinculados = @"
+            UPDATE i
+            SET i.NombreCompleto = u.NombreCompleto,
+                i.CorreoElectronico = u.CorreoElectronico,
+                i.Estado = u.Estado
+            FROM dbo.Instructores i
+            INNER JOIN dbo.Usuarios u
+                ON i.UsuarioId = u.UsuarioId
+            WHERE u.Rol = N'Instructor';";
+
+        using (var cmd = new SqlCommand(sqlInsertarFaltantes, conn))
+            cmd.ExecuteNonQuery();
+
+        using (var cmd = new SqlCommand(sqlActualizarVinculados, conn))
+            cmd.ExecuteNonQuery();
+    }
 }
