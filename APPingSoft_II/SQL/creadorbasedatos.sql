@@ -273,6 +273,9 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_Inscripciones_ParticipanteId' AND object_id = OBJECT_ID(N'dbo.Inscripciones'))
     CREATE INDEX IX_Inscripciones_ParticipanteId ON dbo.Inscripciones(ParticipanteId);
 GO
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_Inscripciones_ProgramaId_Estado' AND object_id = OBJECT_ID(N'dbo.Inscripciones'))
+    CREATE INDEX IX_Inscripciones_ProgramaId_Estado ON dbo.Inscripciones(ProgramaId, Estado);
+GO
 IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_ResultadosEvaluacion_EvaluacionId' AND object_id = OBJECT_ID(N'dbo.ResultadosEvaluacion'))
     CREATE INDEX IX_ResultadosEvaluacion_EvaluacionId ON dbo.ResultadosEvaluacion(EvaluacionId);
 GO
@@ -351,6 +354,36 @@ BEGIN
     )
     BEGIN
         RAISERROR(N'No se puede registrar resultado: la inscripcion no pertenece al curso de la evaluacion.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN dbo.Inscripciones ins
+            ON ins.InscripcionId = i.InscripcionId
+        WHERE ins.Estado NOT IN (N'Activa', N'Finalizada')
+    )
+    BEGIN
+        RAISERROR(N'No se puede registrar resultado: la inscripcion debe estar Activa o Finalizada.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN dbo.Inscripciones ins
+            ON ins.InscripcionId = i.InscripcionId
+        INNER JOIN dbo.Programas p
+            ON p.ProgramaId = ins.ProgramaId
+        WHERE p.Estado = N'Inactivo'
+    )
+    BEGIN
+        RAISERROR(N'No se puede registrar resultado en un programa inactivo.', 16, 1);
         ROLLBACK TRANSACTION;
         RETURN;
     END

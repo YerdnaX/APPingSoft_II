@@ -42,6 +42,9 @@ public class GestionInscripcionesLogic
         var programa = _sistema.Programas.FirstOrDefault(p => p.ProgramaId == programaId);
         if (programa == null) return new List<Curso>();
 
+        if (programa.Curso != null)
+            return new List<Curso> { programa.Curso };
+
         var curso = _sistema.Cursos.FirstOrDefault(c => c.CursoId == programa.CursoId);
         return curso != null ? new List<Curso> { curso } : new List<Curso>();
     }

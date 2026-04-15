@@ -94,6 +94,11 @@
                     <ComboBox x:Name="cmbEvaluacion" Style="{StaticResource FormCombo}"
                               DisplayMemberPath="Titulo"
                               SelectionChanged="CmbEvaluacion_SelectionChanged"/>
+                    <TextBlock Text="PROGRAMA" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
+                    <ComboBox x:Name="cmbPrograma" Style="{StaticResource FormCombo}"
+                              DisplayMemberPath="Nombre"
+                              SelectedValuePath="ProgramaId"
+                              SelectionChanged="CmbPrograma_SelectionChanged"/>
                     <TextBlock Text="PARTICIPANTE" Style="{StaticResource FormLabel}" Foreground="#FF413E3E"/>
                     <ComboBox x:Name="cmbInscripcion" Style="{StaticResource FormCombo}"
                               DisplayMemberPath="Participante.NombreCompleto"
@@ -252,6 +257,10 @@
 
                             <DataGridTextColumn Header="Participante" 
                             Binding="{Binding Inscripcion.Participante.NombreCompleto}" 
+                            Width="*"/>
+
+                            <DataGridTextColumn Header="Programa"
+                            Binding="{Binding Inscripcion.Programa.Nombre}"
                             Width="*"/>
 
                             <DataGridTextColumn Header="Evaluación" 

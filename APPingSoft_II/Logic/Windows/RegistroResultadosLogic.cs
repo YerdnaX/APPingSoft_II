@@ -5,7 +5,7 @@ using APPingSoft_II.Services;
 namespace APPingSoft_II.Logic.Windows;
 
 /// <summary>
-/// Lógica de negocio para la ventana RegistroResultados.
+/// Logica de negocio para la ventana RegistroResultados.
 /// </summary>
 public class RegistroResultadosLogic
 {
@@ -18,12 +18,11 @@ public class RegistroResultadosLogic
         return _sistema.Evaluaciones;
     }
 
-    /// <summary>
-    /// Retorna inscripciones activas de participantes en el curso de la evaluación seleccionada.
-    /// Se usa para poblar el combo de participantes.
-    /// </summary>
-    public List<Inscripcion> ObtenerInscripcionesPorEvaluacion(int evaluacionId) =>
-        _service.ObtenerInscripcionesPorEvaluacion(evaluacionId);
+    public List<Programa> ObtenerProgramasPorEvaluacion(int evaluacionId) =>
+        _service.ObtenerProgramasPorEvaluacion(evaluacionId);
+
+    public List<Inscripcion> ObtenerInscripcionesPorEvaluacion(int evaluacionId, int? programaId = null) =>
+        _service.ObtenerInscripcionesPorEvaluacion(evaluacionId, programaId);
 
     public List<ResultadoEvaluacion> ObtenerResultados()
     {
